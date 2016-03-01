@@ -72,4 +72,12 @@ class ShinsaHexGridGenerator : ICellGridGenerator
         }
         return hexagons;
     }
+
+
+
+    Color colorChanger(Color dominColor, Color secColor)
+    {
+
+        return Color.red;
+    }
 }
