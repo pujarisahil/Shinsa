@@ -20,7 +20,7 @@ public class MyOtherHexagon : Hexagon
     }
     public override void MarkAsHighlighted()
     {
-        SetColor(new Color(0.5f,0.5f,0.5f,0.25f));
+        SetColor(new Color(0.1f,0.1f,0.1f,0.5f));
     }
     public override void UnMark()
     {
