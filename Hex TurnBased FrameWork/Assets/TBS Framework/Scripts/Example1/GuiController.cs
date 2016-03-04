@@ -9,13 +9,17 @@ public class GuiController : MonoBehaviour
     public Button NextTurnButton;
 
     public Image UnitImage;
+    public Sprite[] UnitImagePool;
     public Text InfoText;
     public Text StatsText;
 
+    public GameObject winPanel;
+    public GameObject lossPanel;
+
     void Start()
     {
-        UnitImage.color = Color.gray;
-
+        Time.timeScale = 1f;
+        //UnitImage.color = Color.gray;
         CellGrid.GameStarted += OnGameStarted;
         CellGrid.TurnEnded += OnTurnEnded;   
         CellGrid.GameEnded += OnGameEnded;
@@ -39,6 +43,19 @@ public class GuiController : MonoBehaviour
         OnTurnEnded(sender,e);
     }
 
+    public void surrender()
+    {
+        Time.timeScale = 0f;
+        if (CellGrid.CurrentPlayerNumber == 0)
+        {
+            lossPanel.SetActive(true);
+        }
+        else
+        {
+            winPanel.SetActive(true);
+        }
+    }
+
     private void OnGameEnded(object sender, EventArgs e)
     {
         InfoText.text = "Player " + ((sender as CellGrid).CurrentPlayerNumber + 1) + " wins!";
@@ -51,12 +68,12 @@ public class GuiController : MonoBehaviour
     }
     private void OnCellDehighlighted(object sender, EventArgs e)
     {
-        UnitImage.color = Color.gray;
+        //UnitImage.color = Color.gray;
         StatsText.text = "";
     }
     private void OnCellHighlighted(object sender, EventArgs e)
     {
-        UnitImage.color = Color.gray;
+        //UnitImage.color = Color.gray;
         StatsText.text = "Movement Cost: " + (sender as Cell).MovementCost;
     }
     private void OnUnitAttacked(object sender, AttackEventArgs e)
@@ -71,14 +88,36 @@ public class GuiController : MonoBehaviour
     private void OnUnitDehighlighted(object sender, EventArgs e)
     {
         StatsText.text = "";
-        UnitImage.color = Color.gray;
+        swapPicts(sender as shinsaUnit, false);
+        //UnitImage.color = Color.gray;
     }
     private void OnUnitHighlighted(object sender, EventArgs e)
     {
         var unit = sender as shinsaUnit;
-        StatsText.text = unit.UnitName + "\nHit Points: " + unit.HitPoints +"/"+unit.TotalHitPoints + "\nAttack: " + unit.AttackFactor + "\nDefence: " + unit.DefenceFactor + "\nRange: " + unit.AttackRange;
+        swapPicts(unit, true);
+        StatsText.text = unit.UnitName /*+ "\nHit Points: " + unit.HitPoints +"/"+unit.TotalHitPoints + "\nAttack: " + unit.AttackFactor + "\nDefence: " + unit.DefenceFactor + */ + "\n Range:"   + unit.AttackRange;
 
     }
+    private void swapPicts(shinsaUnit unit, bool toImage)
+    {
+        if(unit.UnitName == "Archflamen" && toImage)
+        {
+            UnitImage.sprite = UnitImagePool[0];
+        }
+        else if(unit.UnitName == "Throng" && toImage)
+        {
+            UnitImage.sprite = UnitImagePool[1];
+        }
+        else if (unit.UnitName == "Flamen" && toImage)
+        {
+            UnitImage.sprite = UnitImagePool[2];
+        }
+        if (!toImage)
+        {
+            UnitImage.sprite = UnitImagePool[UnitImagePool.Length - 1];
+        }
+    }
+
 
     public void RestartLevel()
     {

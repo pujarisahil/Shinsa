@@ -15,7 +15,7 @@ public abstract class Hexagon : Cell
     /// <summary>
     /// Cube coordinates is another system of coordinates that makes calculation on hex grids easier.
     /// </summary>
-    protected Vector3 CubeCoord
+    public Vector3 CubeCoord
     {
         get
         {
@@ -41,7 +41,7 @@ public abstract class Hexagon : Cell
         }
     }
 
-    protected Vector2 CubeToOffsetCoords(Vector3 cubeCoords)
+    public Vector2 CubeToOffsetCoords(Vector3 cubeCoords)
     {
         Vector2 ret = new Vector2();
 
@@ -63,7 +63,7 @@ public abstract class Hexagon : Cell
         return ret;
     }
 
-    protected static readonly Vector3[] _directions =  {
+    public static readonly Vector3[] _directions =  {
         new Vector3(+1, -1, 0), new Vector3(+1, 0, -1), new Vector3(0, +1, -1),
         new Vector3(-1, +1, 0), new Vector3(-1, 0, +1), new Vector3(0, -1, +1)};
 

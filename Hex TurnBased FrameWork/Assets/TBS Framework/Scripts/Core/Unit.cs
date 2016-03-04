@@ -261,7 +261,7 @@ public abstract class Unit : MonoBehaviour
     /// <summary>
     /// Method returns all cells that the unit is capable of moving to.
     /// </summary>
-    public List<Cell> GetAvailableDestinations(List<Cell> cells)
+    public virtual List<Cell> GetAvailableDestinations(List<Cell> cells)
     {
         var ret = new List<Cell>();
         var cellsInMovementRange = cells.FindAll(c => IsCellMovableTo(c) && c.GetDistance(Cell) <= MovementPoints);

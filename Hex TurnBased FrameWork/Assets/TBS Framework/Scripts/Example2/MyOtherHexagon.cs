@@ -12,7 +12,7 @@ public class MyOtherHexagon : Hexagon
 
     public override void MarkAsReachable()
     {
-        SetColor(new Color(1, 0.92f, 0.016f, 1));
+        SetColor(new Color(0.5f, 0.42f, 0.016f, 0.6f));
     }
     public override void MarkAsPath()
     {
@@ -54,6 +54,4 @@ public class MyOtherHexagon : Hexagon
 
 public enum GroundType
 {
-    Land,
-    Water
 };

@@ -30,12 +30,12 @@ public class shinsaUnit : Unit
 
     public override void MarkAsFinished()
     {
-        throw new NotImplementedException();
+        //meObject.Find("CellGrid2").GetComponent<CellGrid>().EndTurn();
     }
 
     public override void MarkAsFriendly()
     {
-        GetComponent<SpriteRenderer>().color = LeadingColor + new Color(0.8f, 1, 0.8f);
+        GetComponent<SpriteRenderer>().color = LeadingColor + new Color(0.8f, 1, 0.8f, 1f);
     }
 
     public override void MarkAsReachableEnemy()
@@ -46,6 +46,7 @@ public class shinsaUnit : Unit
     public override void MarkAsSelected()
     {
         GetComponent<SpriteRenderer>().color = LeadingColor + Color.green;
+        //Debug.Log("hahaha");
     }
 
     public override void UnMark()
