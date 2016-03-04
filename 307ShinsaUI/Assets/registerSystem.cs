@@ -43,7 +43,8 @@ public class registerSystem : MonoBehaviour
                         form.AddField("user", user);
                         form.AddField("name", name);
                         form.AddField("password", password);
-                        WWW w = new WWW("http://f6-preview.awardspace.com/unitytutorial.com/register.php", form);
+                        //script goes there
+                        WWW w = new WWW("", form);
                         StartCoroutine(registerFunc(w));
                     }
                     else
@@ -73,7 +74,7 @@ public class registerSystem : MonoBehaviour
                     WWWForm form = new WWWForm();
                     form.AddField("user", user);
                     form.AddField("password", password);
-                    WWW w = new WWW("http://f6-preview.awardspace.com/unitytutorial.com/login.php", form);
+                    WWW w = new WWW("", form);
                     StartCoroutine(login(w));
                 }
             }

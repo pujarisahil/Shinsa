@@ -8,6 +8,7 @@ public class MainMenuControl : MonoBehaviour {
     public GameObject HowToPlayPanel;
     public GameObject SettingPanel;
     public GameObject CreditPanel;
+    public GameObject loginPanel;
 
     private Vector3 recordPos;
     private GameObject recordPanel;
@@ -42,6 +43,12 @@ public class MainMenuControl : MonoBehaviour {
         else if(buttonIndex == 4)
         {
             StartCoroutine(panelMoving(recordPos,recordPanel));
+        }
+        else if(buttonIndex == 5)
+        {
+            recordPos = loginPanel.GetComponent<RectTransform>().position;
+            recordPanel = loginPanel;
+            StartCoroutine(panelMoving(Vector3.zero, loginPanel));
         }
 
 
