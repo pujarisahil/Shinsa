@@ -21,6 +21,9 @@ class ShinsaHexGridGenerator : ICellGridGenerator
         //if it reaches the last row, it will generate one hexagon cell then skip the next one, in order to create a correct shinsa board. 
         bool flicker = false;
 
+		Color domColor = Color.red;
+		Color secColor = Color.yellow;
+
         if (HexagonPrefab.GetComponent<Hexagon>() == null)
         {
             Debug.LogError("Invalid hexagon prefab provided");
@@ -47,8 +50,13 @@ class ShinsaHexGridGenerator : ICellGridGenerator
                     hexagon.GetComponent<Hexagon>().OffsetCoord = new Vector2(Width - j - 1, Height - i - 1);
                     hexagon.GetComponent<Hexagon>().HexGridType = hexGridType;
                     hexagon.GetComponent<Hexagon>().MovementCost = 1;
-                    hexagons.Add(hexagon.GetComponent<Cell>());
 
+					if (j % 2 == 0) {
+						hexagon.GetComponent<SpriteRenderer> ().color = domColor;
+					} else {
+						hexagon.GetComponent<SpriteRenderer> ().color = secColor;
+					}
+                    hexagons.Add(hexagon.GetComponent<Cell>());
                     hexagon.transform.parent = CellsParent;
                 }
                 else {
@@ -62,14 +70,25 @@ class ShinsaHexGridGenerator : ICellGridGenerator
                         hexagon.GetComponent<Hexagon>().OffsetCoord = new Vector2(Width - j - 1, Height - i - 1);
                         hexagon.GetComponent<Hexagon>().HexGridType = hexGridType;
                         hexagon.GetComponent<Hexagon>().MovementCost = 1;
-                        hexagons.Add(hexagon.GetComponent<Cell>());
 
+						if (j % 2 == 0) {
+							hexagon.GetComponent<SpriteRenderer> ().color = domColor;
+						} else {
+							hexagon.GetComponent<SpriteRenderer> ().color = secColor;
+						}
+
+                        hexagons.Add(hexagon.GetComponent<Cell>());
                         hexagon.transform.parent = CellsParent;
                     }
                     flicker = !flicker;
                 }
             }
+			Color temp = domColor;
+			domColor = colorChanger (domColor, secColor);
+			secColor = temp;
         }
+		//CellsParent.transform.rotation = new Quaternion (0f,0f,-45f,0f);
+		//CellsParent.transform.rotation.Set (0f,0f,-45f,0f);
         return hexagons;
     }
 
@@ -77,7 +96,14 @@ class ShinsaHexGridGenerator : ICellGridGenerator
 
     Color colorChanger(Color dominColor, Color secColor)
     {
-
-        return Color.red;
+		if ((dominColor == Color.green && secColor == Color.red) || (dominColor == Color.red && secColor == Color.green)) {
+			return Color.yellow;
+		} else if ((dominColor == Color.green && secColor == Color.yellow) || (dominColor == Color.yellow && secColor == Color.green)) {
+			return Color.red;
+		}else if((dominColor == Color.red && secColor == Color.yellow) || (dominColor == Color.yellow && secColor == Color.red)){
+			return Color.green;
+		}
+			
+		return Color.white;
     }
 }
