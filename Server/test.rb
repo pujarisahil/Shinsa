@@ -4,11 +4,18 @@ require_relative 'account'
 require_relative 'access_account'
 require_relative 'log'
 require_relative 'access_logs'
+require_relative 'leaderboard'
 
 #Test Account
 account = getAccount("johndoe")
+#account2 = getAccount("player2")
 
-puts account.getUsername()
+puts ""
+puts "Username: #{account.getUsername()}"
+puts "Name: #{account.getRealname()}"
+puts "Rank: #{account.getRank()}"
+puts "Online: #{account.getOnlineStatus()}"
+puts "Number of Players Online: #{account.getAccountsOnline()}"
 puts ""
 
 #Test Logs
