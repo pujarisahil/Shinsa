@@ -28,3 +28,11 @@ newlog.printLog()
 
 #Reset Database
 require_relative 'resetdb'
+
+#Test leaderboard
+rankarray = getLeaderboard(5)
+puts "----Leaderboard----"
+for i in 0..rankarray.size-1
+        puts "#{i + 1} -- #{rankarray[i]}"
+end
+puts ""
