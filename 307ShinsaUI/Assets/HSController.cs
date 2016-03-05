@@ -7,8 +7,8 @@ public class HSController : MonoBehaviour {
     private string secretKey = "mySecretKey"; // Edit this value and make sure it's the same as the one stored on the server
 
     public string addScoreURL = "http://localhost/unity_test/addscore.php?"; //be sure to add a ? to your url
-    public string highscoreURL = "http://localhost/unity_test/display.php";
-    public string getPlayerRankURL = "brah brah la";
+    public string highscoreURL = "http://108.61.214.243:4567/get_leaderboard";
+    public string getPlayerRankURL = "http://108.61.214.243:4567/get_leaderboard";
 
     public GameObject top5Rank;
     public GameObject playRank;
@@ -16,7 +16,7 @@ public class HSController : MonoBehaviour {
     void Start()
     {
         StartCoroutine(GetScores());
-        StartCoroutine(GetPlayerRank());
+        //StartCoroutine(GetPlayerRank());
     }
 
     // remember to use StartCoroutine when calling this function!
@@ -57,8 +57,6 @@ public class HSController : MonoBehaviour {
 
     IEnumerator GetScores()
     {
-        //gameObject.GetComponent<GUIText>().text = "Loading Scores";
-        //highScorePanel.GetComponent<Text>().text = "Loading Scores";
         WWW hs_get = new WWW(highscoreURL);
         yield return hs_get;
 
@@ -68,8 +66,47 @@ public class HSController : MonoBehaviour {
         }
         else
         {
-            top5Rank.GetComponent<Text>().text = hs_get.text; // this is a GUIText that will display the scores in game.
+            JSONObject j = new JSONObject(hs_get.text);
+            string newStr = accessData(j);
+            top5Rank.GetComponent<Text>().text = newStr; // this is a GUIText that will display the scores in game.
         }
+    }
+
+    string accessData(JSONObject obj)
+    {
+        string newOne = null;
+        switch (obj.type)
+        {
+            case JSONObject.Type.OBJECT:
+                for (int i = 0; i < obj.list.Count; i++)
+                {
+                    string key = (string)obj.keys[i];
+                    JSONObject j = (JSONObject)obj.list[i];
+                    newOne += key + "   "; 
+                    newOne += accessData(j);
+                }
+                break;
+            case JSONObject.Type.ARRAY:
+                foreach (JSONObject j in obj.list)
+                {
+                    newOne += accessData(j);
+                }
+                break;
+            case JSONObject.Type.STRING:
+                newOne += obj.str + "\n";
+                break;
+            case JSONObject.Type.NUMBER:
+                newOne += obj.n + "\n";
+                break;
+            case JSONObject.Type.BOOL:
+                newOne += obj.b + "\n";
+                break;
+            case JSONObject.Type.NULL:
+                Debug.Log("NULL");
+                break;
+
+        }
+        return newOne;
     }
 
     public static string Md5Sum(string strToEncrypt)
@@ -91,10 +128,5 @@ public class HSController : MonoBehaviour {
 
         return hashString.PadLeft(32, '0');
 
-        //the above unity snippets will return a hash matching the one returned from PHP's md5() function. In case you are using another language on the server side, here are some examples:
-        //Ruby
-        //require 'digest/md5'
-        //def md5Sum(inputString)
-        //Digest::MD5.hexdigest(inputString)
     }
 }
