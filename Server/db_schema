@@ -1,0 +1,7 @@
+shinsa
+  accounts(username VARCHAR(30), firstname VARCHAR(30), lastname VARCHAR(30), rank INTEGER, games_played INTEGER, games_won INTEGER)
+  
+logs
+  log[log id](player VARCHAR(30), pieceid INTEGER, startpos INTEGER, endpos INTEGER)
+  log_schema(next_log INTEGER, max_logs INTEGER)
+    //next_log indicates the next [log id] when generating tables, max_logs is used in maintenance of the generated tables. Only 1 row in this table
