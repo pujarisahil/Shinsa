@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -66,6 +67,12 @@ public abstract class Hexagon : Cell
     public static readonly Vector3[] _directions =  {
         new Vector3(+1, -1, 0), new Vector3(+1, 0, -1), new Vector3(0, +1, -1),
         new Vector3(-1, +1, 0), new Vector3(-1, 0, +1), new Vector3(0, -1, +1)};
+    public static readonly Vector3[] _directions2 =  {
+        new Vector3(+1, 0, -1), new Vector3(-1, 0, +1)};
+    public static readonly Vector3[] _directions3 =  {
+        new Vector3(1, 1, 1), new Vector3(-1, 1, -1) };
+    public static readonly Vector3[] _directions4 =  {
+        new Vector3(+1, 0, -1)};
 
     public override int GetDistance(Cell other)
     {
@@ -84,7 +91,83 @@ public abstract class Hexagon : Cell
         }
         return ret;
     }//Each square cell has six neighbors, which positions on grid relative to the cell are stored in _directions constant.
+
+//03/04/2016
+    public override List<Cell> Get6LineNeighbours(List<Cell> cells)
+    {
+        List<Cell> ret = new List<Cell>();
+        foreach (var direction in _directions)
+        {
+            int i = 1;
+            while (i < 11)
+            {
+                var neighbour = cells.Find(c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction *i));
+                if (neighbour == null) break;
+                ret.Add(neighbour);
+                i++;
+            }
+
+        }
+        return ret;
+    }
+
+    public override List<Cell> Get1LineNeighbours(List<Cell> cells)
+    {
+        List<Cell> ret = new List<Cell>();
+        foreach (var direction in _directions2)
+        {
+            int i = 1;
+            while (i < 11)
+            {
+                var neighbour = cells.Find(c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction * i));
+                if (neighbour == null) break;
+                ret.Add(neighbour);
+                i++;
+            }
+
+        }
+        return ret;
+    }
+
+    public override List<Cell> GetSameColorCrossNeighbours(List<Cell> cells)
+    {
+        List<Cell> ret = new List<Cell>();
+        foreach (var direction in _directions3)
+        {
+            int i = 1;
+            while (i < 11)
+            {
+                var neighbour = cells.Find(c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction * i));
+                if (neighbour == null) break;
+                ret.Add(neighbour);
+                i++;
+            }
+
+        }
+        return ret;
+    }
+    public override List<Cell> Get3LineNeighbours(List<Cell> cells)
+    {
+        List<Cell> ret = new List<Cell>();
+        foreach (var direction in _directions4)
+        {
+            int i = 1;
+            while (i < 11)
+            {
+                var neighbour = cells.Find(c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction * i));
+                if (neighbour == null) break;
+                ret.Add(neighbour);
+                i++;
+            }
+
+        }
+        return ret;
+    }
+
+
 }
+
+
 
 public enum HexGridType
 {

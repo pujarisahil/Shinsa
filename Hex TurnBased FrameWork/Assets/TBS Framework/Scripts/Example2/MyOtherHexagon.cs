@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MyOtherHexagon : Hexagon
@@ -12,7 +14,7 @@ public class MyOtherHexagon : Hexagon
 
     public override void MarkAsReachable()
     {
-        SetColor(new Color(0.5f, 0.42f, 0.016f, 0.6f));
+        SetColor(new Color(1f, 1f, 1f, 1f));
     }
     public override void MarkAsPath()
     {

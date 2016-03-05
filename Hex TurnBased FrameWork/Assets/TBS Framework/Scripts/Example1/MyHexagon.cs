@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 class MyHexagon : Hexagon
 {
@@ -67,7 +69,5 @@ class MyHexagon : Hexagon
                 rendererComponent.material.color = color;
         }
     }
-
-    
 }
 

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 public class MySquare : Square
 {
@@ -38,5 +40,21 @@ public class MySquare : Square
         {
             spriteRenderer.color = color;
         }
+    }
+    public override List<Cell> Get6LineNeighbours(List<Cell> cells)
+    {
+        throw new NotImplementedException();
+    }
+    public override List<Cell> Get1LineNeighbours(List<Cell> cells)
+    {
+        throw new NotImplementedException();
+    }
+    public override List<Cell> GetSameColorCrossNeighbours(List<Cell> cells)
+    {
+        throw new NotImplementedException();
+    }
+    public override List<Cell> Get3LineNeighbours(List<Cell> cells)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 class SampleSquare : Square
 {
@@ -25,6 +27,22 @@ class SampleSquare : Square
     public override void UnMark()
     {
         GetComponent<Renderer>().material.color = Color.white;
+    }
+    public override List<Cell> Get6LineNeighbours(List<Cell> cells)
+    {
+        throw new NotImplementedException();
+    }
+    public override List<Cell> Get1LineNeighbours(List<Cell> cells)
+    {
+        throw new NotImplementedException();
+    }
+    public override List<Cell> GetSameColorCrossNeighbours(List<Cell> cells)
+    {
+        throw new NotImplementedException();
+    }
+    public override List<Cell> Get3LineNeighbours(List<Cell> cells)
+    {
+        throw new NotImplementedException();
     }
 }
 
