@@ -204,6 +204,11 @@ public abstract class Unit : MonoBehaviour
         }
     }
 
+	public virtual void OccupyEnemyCell(Cell destinationCell){
+		GameObject.Find ("CellGrid2").GetComponent<CellGrid> ().Units.Find (c => c.Cell == destinationCell).OnDestroyed ();
+	
+	}
+
     public virtual void Move(Cell destinationCell, List<Cell> path)
     {
         if (isMoving)
@@ -217,6 +222,10 @@ public abstract class Unit : MonoBehaviour
 
         Cell.IsTaken = false;
 		Cell.setIndex (-1);
+		if (destinationCell.playerIndex != PlayerNumber && destinationCell.playerIndex != -1) {
+			Debug.Log ("haha its here");
+			OccupyEnemyCell (destinationCell);
+		}
         Cell = destinationCell;
         destinationCell.IsTaken = true;
 		destinationCell.setIndex (PlayerNumber);

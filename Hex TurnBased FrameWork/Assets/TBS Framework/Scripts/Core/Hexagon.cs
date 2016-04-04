@@ -110,7 +110,10 @@ public abstract class Hexagon : Cell
                 var neighbour = cells.Find(c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction *i));
 				if (neighbour == null)
 					break;
-				else if (neighbour.IsTaken)
+				else if (neighbour.IsTaken && neighbour.playerIndex != playerIndex) {
+					ret.Add (neighbour);	
+					break;
+				} else if (neighbour.IsTaken)
 					break;
                 ret.Add(neighbour);
                 i++;
@@ -129,9 +132,12 @@ public abstract class Hexagon : Cell
             while (i < 11)
             {
                 var neighbour = cells.Find(c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction * i));
-                if (neighbour == null) 
+				if (neighbour == null)
 					break;
-				else if (neighbour.IsTaken)
+				else if (neighbour.IsTaken && neighbour.playerIndex != playerIndex) {
+					ret.Add (neighbour);
+					break;
+				} else if (neighbour.IsTaken) 
 					break;
                 ret.Add(neighbour);
                 i++;
@@ -167,9 +173,12 @@ public abstract class Hexagon : Cell
             while (i < 11)
             {
                 var neighbour = cells.Find(c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction * i));
-                if (neighbour == null) 
+				if (neighbour == null)
 					break;
-				else if (neighbour.IsTaken)
+				else if (neighbour.IsTaken && neighbour.playerIndex != playerIndex) {
+					ret.Add (neighbour);
+					break;
+				} else if (neighbour.IsTaken)
 					break;
                 ret.Add(neighbour);
                 i++;

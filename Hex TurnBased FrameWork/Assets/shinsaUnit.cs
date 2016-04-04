@@ -26,7 +26,8 @@ public class shinsaUnit : Unit
 
     public override void MarkAsDestroyed()
     {
-        throw new NotImplementedException();
+		Debug.Log ("haha");
+        //throw new NotImplementedException();
     }
 
     public override void MarkAsFinished()

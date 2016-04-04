@@ -20,7 +20,7 @@ class CellGridStateUnitSelected : CellGridState
     {
         if (_unit.isMoving)
             return;
-        if(cell.IsTaken)
+		if(cell.IsTaken && cell.playerIndex == _unit.PlayerNumber)
         {
             _cellGrid.CellGridState = new CellGridStateWaitingForInput(_cellGrid);
             return;
