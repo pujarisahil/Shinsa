@@ -11,6 +11,7 @@ public class shinsaUnit : Unit
         base.Initialize();
         transform.position += new Vector3(0, 0, -1);
         GetComponent<SpriteRenderer>().color = LeadingColor;
+		Cell.setIndex (PlayerNumber);
     }
 
     public override void MarkAsAttacking(Unit other)
@@ -35,7 +36,7 @@ public class shinsaUnit : Unit
 
     public override void MarkAsFriendly()
     {
-        GetComponent<SpriteRenderer>().color = LeadingColor + new Color(0.8f, 1, 0.8f, 1f);
+        GetComponent<SpriteRenderer>().color = LeadingColor/* + new Color(0.8f, 1, 0.8f, 1f)*/;
     }
 
     public override void MarkAsReachableEnemy()

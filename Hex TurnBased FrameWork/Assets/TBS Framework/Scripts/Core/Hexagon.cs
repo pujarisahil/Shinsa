@@ -7,11 +7,14 @@ using UnityEngine;
 /// </summary>
 public abstract class Hexagon : Cell
 {
+
+
     /// <summary>
     /// HexGrids comes in four types regarding the layout. This distinction is necessary to convert cube coordinates to offset and vice versa.
     /// </summary>
     [HideInInspector]
     public HexGridType HexGridType;
+
 
     /// <summary>
     /// Cube coordinates is another system of coordinates that makes calculation on hex grids easier.
@@ -73,6 +76,9 @@ public abstract class Hexagon : Cell
         new Vector3(1, 1, 1), new Vector3(-1, 1, -1) };
     public static readonly Vector3[] _directions4 =  {
         new Vector3(+1, 0, -1)};
+	public static readonly Vector3[] _directions5 = { 
+		new Vector3(+1, -1, 0), new Vector3(0, +1, -1)
+	};
 
     public override int GetDistance(Cell other)
     {
@@ -102,7 +108,10 @@ public abstract class Hexagon : Cell
             while (i < 11)
             {
                 var neighbour = cells.Find(c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction *i));
-                if (neighbour == null) break;
+				if (neighbour == null)
+					break;
+				else if (neighbour.IsTaken)
+					break;
                 ret.Add(neighbour);
                 i++;
             }
@@ -120,7 +129,10 @@ public abstract class Hexagon : Cell
             while (i < 11)
             {
                 var neighbour = cells.Find(c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction * i));
-                if (neighbour == null) break;
+                if (neighbour == null) 
+					break;
+				else if (neighbour.IsTaken)
+					break;
                 ret.Add(neighbour);
                 i++;
             }
@@ -155,19 +167,31 @@ public abstract class Hexagon : Cell
             while (i < 11)
             {
                 var neighbour = cells.Find(c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction * i));
-                if (neighbour == null) break;
+                if (neighbour == null) 
+					break;
+				else if (neighbour.IsTaken)
+					break;
                 ret.Add(neighbour);
                 i++;
             }
-
         }
         return ret;
     }
 
-
+	public List<Cell> GetEnemyOccupiedNeighbours(List<Cell> cells){
+		List<Cell> ret = new List<Cell> ();
+		foreach (var direction in _directions5) {
+			var neighbour = cells.Find (c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction));
+			if (neighbour == null) 
+				break;
+			else if (neighbour.IsTaken && neighbour.playerIndex != playerIndex)
+				ret.Add(neighbour);
+			else
+				continue;
+		}
+		return ret;
+	}
 }
-
-
 
 public enum HexGridType
 {

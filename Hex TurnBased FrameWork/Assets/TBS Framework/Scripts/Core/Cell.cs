@@ -18,6 +18,14 @@ public abstract class Cell : MonoBehaviour, IGraphNode
     /// </summary>
     public int MovementCost;
 
+	// <summary>
+	// the player index of the player that is currently occupying this cell
+	// </summary>
+	public int playerIndex = -1;
+	public void setIndex(int index){
+		this.playerIndex = index;
+	}
+
     /// <summary>
     /// CellClicked event is invoked when user clicks the unit. It requires a collider on the cell game object to work.
     /// </summary>

@@ -216,14 +216,17 @@ public abstract class Unit : MonoBehaviour
         MovementPoints -= totalMovementCost;
 
         Cell.IsTaken = false;
+		Cell.setIndex (-1);
         Cell = destinationCell;
         destinationCell.IsTaken = true;
+		destinationCell.setIndex (PlayerNumber);
 
-        if (MovementSpeed > 0)
-            StartCoroutine(MovementAnimation(path));
-        else
-            transform.position = Cell.transform.position;
-
+		if (MovementSpeed > 0)
+			StartCoroutine (MovementAnimation (path));
+		else {
+			//transform.position = Cell.transform.position
+			transform.position = new Vector3 (Cell.transform.position.x, Cell.transform.position.y, transform.position.z);
+		}
         if (UnitMoved != null)
             UnitMoved.Invoke(this, new MovementEventArgs(Cell, destinationCell, path));    
     }

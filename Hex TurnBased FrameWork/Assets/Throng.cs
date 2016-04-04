@@ -13,6 +13,8 @@ public class Throng : shinsaUnit {
 
         var cellsInMovementRange = ret.FindAll(c => IsCellMovableTo(c) && c.GetDistance(Cell) <= MovementPoints);
 
+		cellsInMovementRange.AddRange (Cell.GetComponent<Hexagon> ().GetEnemyOccupiedNeighbours (cells));
+
         return cellsInMovementRange;
     }
 }

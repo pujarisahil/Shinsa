@@ -14,15 +14,15 @@ public class MyOtherHexagon : Hexagon
 
     public override void MarkAsReachable()
     {
-        SetColor(new Color(1f, 1f, 1f, 1f));
+        SetColor(new Color(0.5f, 0.5f, 0.5f, 0.8f));
     }
     public override void MarkAsPath()
     {
-        SetColor(new Color(0,1,0,1));
+        SetColor(new Color(0,1,1,1));
     }
     public override void MarkAsHighlighted()
     {
-        SetColor(new Color(0.1f,0.1f,0.1f,0.5f));
+        SetColor(new Color(0f,0f,1f,0.5f));
     }
     public override void UnMark()
     {
@@ -39,7 +39,7 @@ public class MyOtherHexagon : Hexagon
         }
         foreach (Transform child in highlighter.transform)
         {
-            var childColor = new Color(color.r,color.g,color.b,1);
+			var childColor = new Color(color.r,color.g,color.b,color.a);
             spriteRenderer = child.GetComponent<SpriteRenderer>();
             if (spriteRenderer == null) continue;
 
