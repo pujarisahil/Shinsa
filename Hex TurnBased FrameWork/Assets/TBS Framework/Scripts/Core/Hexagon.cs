@@ -76,6 +76,7 @@ public abstract class Hexagon : Cell
         new Vector3(1, 1, 1), new Vector3(-1, 1, -1) };
     public static readonly Vector3[] _directions4 =  {
         new Vector3(+1, 0, -1)};
+	
 	public static readonly Vector3[] _directions5 = { 
 		new Vector3(+1, -1, 0), new Vector3(0, +1, -1)
 	};
@@ -169,10 +170,7 @@ public abstract class Hexagon : Cell
         List<Cell> ret = new List<Cell>();
         foreach (var direction in _directions4)
         {
-            int i = 1;
-            while (i < 11)
-            {
-                var neighbour = cells.Find(c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction * i));
+                var neighbour = cells.Find(c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction));
 				if (neighbour == null)
 					break;
 				else if (neighbour.IsTaken && neighbour.playerIndex != playerIndex) {
@@ -181,23 +179,30 @@ public abstract class Hexagon : Cell
 				} else if (neighbour.IsTaken)
 					break;
                 ret.Add(neighbour);
-                i++;
-            }
+            
         }
         return ret;
     }
 
 	public List<Cell> GetEnemyOccupiedNeighbours(List<Cell> cells){
 		List<Cell> ret = new List<Cell> ();
+		//Debug.Log (cells.Count);
 		foreach (var direction in _directions5) {
+			
 			var neighbour = cells.Find (c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction));
-			if (neighbour == null) 
+			if (neighbour == null)
 				break;
-			else if (neighbour.IsTaken && neighbour.playerIndex != playerIndex)
-				ret.Add(neighbour);
-			else
+			else if (neighbour.IsTaken && neighbour.playerIndex != playerIndex) {
+				ret.Add (neighbour);
+			} else {
+				Debug.Log (neighbour.IsTaken);
+				Debug.Log (neighbour.playerIndex);
+				Debug.Log (playerIndex);
 				continue;
+			}
+			
 		}
+		Debug.Log ("heh" + ret.Count);
 		return ret;
 	}
 }

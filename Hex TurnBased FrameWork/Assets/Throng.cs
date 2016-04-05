@@ -7,14 +7,17 @@ public class Throng : shinsaUnit {
 
     public override List<Cell> GetAvailableDestinations(List<Cell> cells)
     {
+		//Debug.Log ("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         var ret = new List<Cell>();
 
         ret = Cell.GetComponent<Hexagon>().Get3LineNeighbours(cells);
 
-        var cellsInMovementRange = ret.FindAll(c => IsCellMovableTo(c) && c.GetDistance(Cell) <= MovementPoints);
+		Debug.Log ("occ neighb"+ Cell.GetComponent<Hexagon> ().GetEnemyOccupiedNeighbours (cells).Count);
+		ret.AddRange (Cell.GetComponent<Hexagon> ().GetEnemyOccupiedNeighbours (cells));
 
-		cellsInMovementRange.AddRange (Cell.GetComponent<Hexagon> ().GetEnemyOccupiedNeighbours (cells));
+		Debug.Log ("It has " + ret.Count);
 
-        return cellsInMovementRange;
+        //return cellsInMovementRange;
+		return ret;
     }
 }

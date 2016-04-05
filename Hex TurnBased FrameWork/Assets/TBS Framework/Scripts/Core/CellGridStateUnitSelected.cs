@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 class CellGridStateUnitSelected : CellGridState
 {
@@ -39,12 +40,17 @@ class CellGridStateUnitSelected : CellGridState
     }
     public override void OnUnitClicked(Unit unit)
     {
+		Debug.Log ("ZZ");
         if (unit.Equals(_unit) || unit.isMoving)
             return;
 
-        if (_unitsInRange.Contains(unit) && _unit.ActionPoints > 0)
+		//check if unit is in its reachableEnemyList. if yes move. if no deny player
+		if (/*_unitsInRange.Contains(unit)*/_unit.ReachableEnemyCellList.Contains(unit.Cell) && _unit.ActionPoints > 0)
         {
-            _unit.DealDamage(unit);
+			Debug.Log ("sdadsa");
+
+			//_unit.DealDamage(unit);
+			_unit.Move(unit.Cell,_unit.FindPath(_cellGrid.Cells, unit.Cell));
             _cellGrid.CellGridState = new CellGridStateUnitSelected(_cellGrid, _unit);
         }
 
@@ -104,7 +110,7 @@ class CellGridStateUnitSelected : CellGridState
             if (currentUnit.PlayerNumber.Equals(_unit.PlayerNumber))
                 continue;
         
-            if (_unit.IsUnitAttackable(currentUnit,_unit.Cell))
+			if (_unit.IsUnitAttackable(currentUnit,_unit.Cell))
             {
                 currentUnit.SetState(new UnitStateMarkedAsReachableEnemy(currentUnit));
                 _unitsInRange.Add(currentUnit);

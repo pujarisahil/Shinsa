@@ -73,6 +73,8 @@ public abstract class Unit : MonoBehaviour
 
     private static IPathfinding _pathfinder = new AStarPathfinding();
 
+	public List<Cell> ReachableEnemyCellList;
+
     /// <summary>
     /// Method called after object instantiation to initialize fields etc. 
     /// </summary>
@@ -154,7 +156,7 @@ public abstract class Unit : MonoBehaviour
     }
 
     /// <summary>
-    /// Method indicates if it is possible to attack unit given as parameter, from cell given as second parameter.
+	/// Method indicates if it is possible to attack unit given as parameter, from cell given as second parameter.(deprecated)
     /// </summary>
     public virtual bool IsUnitAttackable(Unit other, Cell sourceCell)
     {
@@ -164,7 +166,7 @@ public abstract class Unit : MonoBehaviour
         return false;
     }
     /// <summary>
-    /// Method deals damage to unit given as parameter.
+	/// Method deals damage to unit given as parameter.(deprecated)
     /// </summary>
     public virtual void DealDamage(Unit other)
     {
@@ -186,7 +188,7 @@ public abstract class Unit : MonoBehaviour
         }  
     }
     /// <summary>
-    /// Attacking unit calls Defend method on defending unit. 
+	/// Attacking unit calls Defend method on defending unit. (deprecated)
     /// </summary>
     protected virtual void Defend(Unit other, int damage)
     {
@@ -205,7 +207,7 @@ public abstract class Unit : MonoBehaviour
     }
 
 	public virtual void OccupyEnemyCell(Cell destinationCell){
-		GameObject.Find ("CellGrid2").GetComponent<CellGrid> ().Units.Find (c => c.Cell == destinationCell).OnDestroyed ();
+		GameObject.Find ("CellGrid").GetComponent<CellGrid> ().Units.Find (c => c.Cell == destinationCell).OnDestroyed ();
 	
 	}
 
@@ -229,6 +231,8 @@ public abstract class Unit : MonoBehaviour
         Cell = destinationCell;
         destinationCell.IsTaken = true;
 		destinationCell.setIndex (PlayerNumber);
+		emptyEnemyList ();
+		setEnemyList ();
 
 		if (MovementSpeed > 0)
 			StartCoroutine (MovementAnimation (path));
@@ -239,6 +243,10 @@ public abstract class Unit : MonoBehaviour
         if (UnitMoved != null)
             UnitMoved.Invoke(this, new MovementEventArgs(Cell, destinationCell, path));    
     }
+
+	///<summary>
+	///Execute the movement animation(deprecated)
+	///</summary>
     protected virtual IEnumerator MovementAnimation(List<Cell> path)
     {
         isMoving = true;
@@ -316,6 +324,11 @@ public abstract class Unit : MonoBehaviour
         }
         return ret;
     }
+
+	public virtual void setEnemyList(){
+	}
+	public virtual void emptyEnemyList(){
+	}
 
     /// <summary>
     /// Gives visual indication that the unit is under attack.
