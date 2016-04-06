@@ -38,7 +38,7 @@ public abstract class Cell : MonoBehaviour, IGraphNode
 
     protected virtual void OnMouseEnter()
     {
-        if (CellHighlighted != null)
+		if (CellHighlighted != null && !IsTaken)
             CellHighlighted.Invoke(this, new EventArgs());
     }
     protected virtual void OnMouseExit()

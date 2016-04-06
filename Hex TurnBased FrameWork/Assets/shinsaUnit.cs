@@ -9,19 +9,26 @@ public class shinsaUnit : Unit
     public Color LeadingColor;
     public string UnitName;
 
-
-	public override void setEnemyList(){
-		List<Cell> reachableCells = new List<Cell>();
-		reachableCells = GetAvailableDestinations (GameObject.Find ("CellGrid").GetComponent<CellGrid> ().Cells);
-		//Debug.Log ("reach here");
-		foreach (Cell c in reachableCells) {
-			Debug.Log (gameObject.name);
-			if(c.playerIndex!=PlayerNumber && c.IsTaken)
-				this.ReachableEnemyCellList.Add (c);
+	public override void Move(Cell destinationCell, List<Cell> path){
+		if (isMoving)
+			return;
+		Cell.IsTaken = false;
+		Cell.setIndex (-1);
+		if (destinationCell.playerIndex != PlayerNumber && destinationCell.playerIndex != -1) {
+			Debug.Log ("shinsa Unit moves");
+			OccupyEnemyCell (destinationCell);
 		}
-	}
-	public override void emptyEnemyList(){
-		ReachableEnemyCellList.Clear ();
+
+		Cell = destinationCell;
+		destinationCell.IsTaken = true;
+		destinationCell.setIndex (PlayerNumber);
+
+		transform.position = new Vector3 (Cell.transform.position.x, Cell.transform.position.y, transform.position.z);
+
+		/*
+		if (UnitMoved != null)
+			UnitMoved.Invoke(this, new MovementEventArgs(Cell, destinationCell, path));    
+		*/
 	}
 
     public override void Initialize() {
@@ -30,8 +37,8 @@ public class shinsaUnit : Unit
         GetComponent<SpriteRenderer>().color = LeadingColor;
 		Cell.setIndex (PlayerNumber);
 		Cell.IsTaken = true;
-		ReachableEnemyCellList = new List<Cell> ();
-		setEnemyList ();
+		//ReachableEnemyCellList = new List<Cell> ();
+		//setEnemyList ();
     }
 
     public override void MarkAsAttacking(Unit other)

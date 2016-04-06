@@ -14,15 +14,21 @@ public class MyOtherHexagon : Hexagon
 
     public override void MarkAsReachable()
     {
-        SetColor(new Color(0.5f, 0.5f, 0.5f, 0.8f));
+		//Debug.Log ("reachable");
+        SetColor(new Color(0.5f, 0.5f, 0.5f, 1f));
     }
+
+	/// <summary>
+	///  Method of highlighting a path(deprecated)
+	/// </summary>
     public override void MarkAsPath()
     {
-        SetColor(new Color(0,1,1,1));
+		Debug.Log ("MarkAsPath method is deprecated");
+        //SetColor(new Color(0,1,1,1));
     }
     public override void MarkAsHighlighted()
     {
-        SetColor(new Color(0f,0f,1f,0.5f));
+        SetColor(new Color(1f,1f,1f,0.5f));
     }
     public override void UnMark()
     {

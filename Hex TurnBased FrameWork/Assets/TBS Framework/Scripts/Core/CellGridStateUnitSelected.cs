@@ -33,7 +33,7 @@ class CellGridStateUnitSelected : CellGridState
         }
         else
         {
-            var path = _unit.FindPath(_cellGrid.Cells, cell);
+			var path = _unit.FindPath(_unit.GetAvailableDestinations(_cellGrid.Cells), cell);
             _unit.Move(cell,path);
             _cellGrid.CellGridState = new CellGridStateUnitSelected(_cellGrid, _unit);
         }
@@ -45,10 +45,9 @@ class CellGridStateUnitSelected : CellGridState
             return;
 
 		//check if unit is in its reachableEnemyList. if yes move. if no deny player
-		if (/*_unitsInRange.Contains(unit)*/_unit.ReachableEnemyCellList.Contains(unit.Cell) && _unit.ActionPoints > 0)
+		if (_unit.GetAvailableDestinations(_cellGrid.Cells).Contains(unit.Cell) && _unit.ActionPoints > 0)
         {
 			Debug.Log ("sdadsa");
-
 			//_unit.DealDamage(unit);
 			_unit.Move(unit.Cell,_unit.FindPath(_cellGrid.Cells, unit.Cell));
             _cellGrid.CellGridState = new CellGridStateUnitSelected(_cellGrid, _unit);
@@ -75,19 +74,22 @@ class CellGridStateUnitSelected : CellGridState
     }
     public override void OnCellSelected(Cell cell)
     {
-        base.OnCellSelected(cell);
-        if (!_pathsInRange.Contains(cell)) return;
-        var path = _unit.FindPath(_cellGrid.Cells, cell);
-        foreach (var _cell in path)
+		base.OnCellSelected (cell);
+		if (!_pathsInRange.Contains (cell))
+				return;
+		//var path = _unit.FindPath(_cellGrid.Cells, cell);       
+		/*foreach (var _cell in path)
         {
             _cell.MarkAsPath();
         }
+        */
     }
 
     public override void OnStateEnter()
     {
         base.OnStateEnter();
 
+		//Debug.Log("hover");
         _unit.OnUnitSelected();
         _unitCell = _unit.Cell;
 
@@ -98,6 +100,7 @@ class CellGridStateUnitSelected : CellGridState
         {
             cell.UnMark();
         }
+
         foreach (var cell in _pathsInRange)
         {
             cell.MarkAsReachable();

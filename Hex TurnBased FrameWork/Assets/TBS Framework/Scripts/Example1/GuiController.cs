@@ -16,6 +16,9 @@ public class GuiController : MonoBehaviour
     public GameObject winPanel;
     public GameObject lossPanel;
 
+	public Material UnitHighlightingMaterial;
+	public Material UnitDefaultMaterial;
+
     void Start()
     {
         Time.timeScale = 1f;
@@ -89,15 +92,24 @@ public class GuiController : MonoBehaviour
     {
         StatsText.text = "";
         swapPicts(sender as shinsaUnit, false);
-        //UnitImage.color = Color.gray;
+		swapMaterial (sender as shinsaUnit, false);
     }
     private void OnUnitHighlighted(object sender, EventArgs e)
     {
         var unit = sender as shinsaUnit;
         swapPicts(unit, true);
         StatsText.text = unit.UnitName /*+ "\nHit Points: " + unit.HitPoints +"/"+unit.TotalHitPoints + "\nAttack: " + unit.AttackFactor + "\nDefence: " + unit.DefenceFactor + */ + "\n Range:"   + unit.AttackRange;
-
+		swapMaterial (sender as shinsaUnit, true);
     }
+	private void swapMaterial(shinsaUnit a, bool highlightIt){
+		if (highlightIt) {
+			a.GetComponent<SpriteRenderer> ().material = UnitHighlightingMaterial;
+		} else {
+			a.GetComponent<SpriteRenderer> ().material = UnitDefaultMaterial;
+		}
+
+	}
+
     private void swapPicts(shinsaUnit unit, bool toImage)
     {
         if(unit.UnitName == "Archflamen" && toImage)

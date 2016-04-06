@@ -18,7 +18,7 @@ public abstract class CellGridState
     }
     public virtual void OnCellSelected(Cell cell)
     {
-        cell.MarkAsHighlighted();
+		cell.MarkAsHighlighted ();
     }
     public virtual void OnCellClicked(Cell cell)
     { }

@@ -73,8 +73,6 @@ public abstract class Unit : MonoBehaviour
 
     private static IPathfinding _pathfinder = new AStarPathfinding();
 
-	public List<Cell> ReachableEnemyCellList;
-
     /// <summary>
     /// Method called after object instantiation to initialize fields etc. 
     /// </summary>
@@ -96,14 +94,19 @@ public abstract class Unit : MonoBehaviour
     }
     protected virtual void OnMouseEnter()
     {
-        if (UnitHighlighted != null)
-            UnitHighlighted.Invoke(this, new EventArgs());
-    }
+		if (UnitHighlighted != null) {
+			UnitHighlighted.Invoke (this, new EventArgs ());
+			//this.Cell.GetComponent<Cell> ().MarkAsHighlighted();
+			Debug.Log ("On mouse Enter");
+		}
+	}
     protected virtual void OnMouseExit()
     {
-        if (UnitDehighlighted != null)
-            UnitDehighlighted.Invoke(this, new EventArgs());
-    }
+		if (UnitDehighlighted != null) {
+			UnitDehighlighted.Invoke (this, new EventArgs ());
+			//this.Cell.GetComponent<Cell> ().UnMark ();
+		}
+	}
 
     /// <summary>
     /// Method is called at the start of each turn.
@@ -231,8 +234,8 @@ public abstract class Unit : MonoBehaviour
         Cell = destinationCell;
         destinationCell.IsTaken = true;
 		destinationCell.setIndex (PlayerNumber);
-		emptyEnemyList ();
-		setEnemyList ();
+		//emptyEnemyList ();
+		//setEnemyList ();
 
 		if (MovementSpeed > 0)
 			StartCoroutine (MovementAnimation (path));
@@ -300,6 +303,10 @@ public abstract class Unit : MonoBehaviour
         }
         return ret.FindAll(IsCellMovableTo).Distinct().ToList();
     }
+
+	/// <summary>
+	/// Method of finding path between two cells(deprecated)
+	///<summary>
 
     public List<Cell> FindPath(List<Cell> cells, Cell destination)
     {
@@ -378,7 +385,7 @@ public class MovementEventArgs : EventArgs
     {
         OriginCell = sourceCell;
         DestinationCell = destinationCell;
-        Path = path;
+		Path = path;
     }
 }
 public class AttackEventArgs : EventArgs
