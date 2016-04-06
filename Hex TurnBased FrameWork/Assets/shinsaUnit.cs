@@ -25,6 +25,8 @@ public class shinsaUnit : Unit
 
 		transform.position = new Vector3 (Cell.transform.position.x, Cell.transform.position.y, transform.position.z);
 
+		SetState(new UnitStateNormal(this));
+		//this.OnUnitDeselected ();
 		/*
 		if (UnitMoved != null)
 			UnitMoved.Invoke(this, new MovementEventArgs(Cell, destinationCell, path));    
@@ -60,6 +62,7 @@ public class shinsaUnit : Unit
     public override void MarkAsFinished()
     {
         //meObject.Find("CellGrid2").GetComponent<CellGrid>().EndTurn();
+		Debug.LogWarning("fnnisss");
     }
 
     public override void MarkAsFriendly()

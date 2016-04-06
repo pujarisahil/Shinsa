@@ -96,7 +96,6 @@ public abstract class Unit : MonoBehaviour
     {
 		if (UnitHighlighted != null) {
 			UnitHighlighted.Invoke (this, new EventArgs ());
-			//this.Cell.GetComponent<Cell> ().MarkAsHighlighted();
 			Debug.Log ("On mouse Enter");
 		}
 	}
@@ -104,7 +103,6 @@ public abstract class Unit : MonoBehaviour
     {
 		if (UnitDehighlighted != null) {
 			UnitDehighlighted.Invoke (this, new EventArgs ());
-			//this.Cell.GetComponent<Cell> ().UnMark ();
 		}
 	}
 

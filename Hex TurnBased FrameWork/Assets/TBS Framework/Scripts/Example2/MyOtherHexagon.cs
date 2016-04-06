@@ -15,7 +15,7 @@ public class MyOtherHexagon : Hexagon
     public override void MarkAsReachable()
     {
 		//Debug.Log ("reachable");
-        SetColor(new Color(0.5f, 0.5f, 0.5f, 1f));
+        SetColor(new Color(1f, 1f, 1f, 0.5f));
     }
 
 	/// <summary>

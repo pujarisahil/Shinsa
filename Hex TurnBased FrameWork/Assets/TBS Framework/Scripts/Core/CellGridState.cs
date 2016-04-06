@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using UnityEngine;
 
 public abstract class CellGridState
 {
@@ -10,7 +11,9 @@ public abstract class CellGridState
     }
 
     public virtual void OnUnitClicked(Unit unit)
-    { }
+	{
+		Debug.Log ("CellGridState: OnUnitClicked");
+	}
     
     public virtual void OnCellDeselected(Cell cell)
     {

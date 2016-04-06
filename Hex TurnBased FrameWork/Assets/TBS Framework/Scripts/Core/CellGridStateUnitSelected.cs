@@ -35,7 +35,8 @@ class CellGridStateUnitSelected : CellGridState
         {
 			var path = _unit.FindPath(_unit.GetAvailableDestinations(_cellGrid.Cells), cell);
             _unit.Move(cell,path);
-            _cellGrid.CellGridState = new CellGridStateUnitSelected(_cellGrid, _unit);
+			_cellGrid.CellGridState = new CellGridStateWaitingForInput (_cellGrid);
+            //_cellGrid.CellGridState = new CellGridStateUnitSelected(_cellGrid, _unit);
         }
     }
     public override void OnUnitClicked(Unit unit)
@@ -47,14 +48,16 @@ class CellGridStateUnitSelected : CellGridState
 		//check if unit is in its reachableEnemyList. if yes move. if no deny player
 		if (_unit.GetAvailableDestinations(_cellGrid.Cells).Contains(unit.Cell) && _unit.ActionPoints > 0)
         {
-			Debug.Log ("sdadsa");
+			Debug.LogWarning ("sdadsa");
 			//_unit.DealDamage(unit);
 			_unit.Move(unit.Cell,_unit.FindPath(_cellGrid.Cells, unit.Cell));
-            _cellGrid.CellGridState = new CellGridStateUnitSelected(_cellGrid, _unit);
+           // _cellGrid.CellGridState = new CellGridStateUnitSelected(_cellGrid, _unit);
+			_cellGrid.CellGridState = new CellGridStateWaitingForInput (_cellGrid);
         }
 
         if (unit.PlayerNumber.Equals(_unit.PlayerNumber))
         {
+			Debug.LogWarning ("this is equal");
             _cellGrid.CellGridState = new CellGridStateUnitSelected(_cellGrid, unit);
         }
             
@@ -89,7 +92,7 @@ class CellGridStateUnitSelected : CellGridState
     {
         base.OnStateEnter();
 
-		//Debug.Log("hover");
+		Debug.Log("Mark as ");
         _unit.OnUnitSelected();
         _unitCell = _unit.Cell;
 

@@ -79,6 +79,12 @@ public class GuiController : MonoBehaviour
         //UnitImage.color = Color.gray;
         StatsText.text = "Movement Cost: " + (sender as Cell).MovementCost;
     }
+
+	/// <summary>
+	/// Raises the unit attacked event.(deprecated)
+	/// </summary>
+	/// <param name="sender">Sender.</param>
+	/// <param name="e">E.</param>
     private void OnUnitAttacked(object sender, AttackEventArgs e)
     {
         if (!(CellGrid.CurrentPlayer is HumanPlayer)) return;
@@ -88,26 +94,38 @@ public class GuiController : MonoBehaviour
 
         OnUnitHighlighted(sender, e);
     }
+
+
     private void OnUnitDehighlighted(object sender, EventArgs e)
     {
-        StatsText.text = "";
-        swapPicts(sender as shinsaUnit, false);
-		swapMaterial (sender as shinsaUnit, false);
+		var unit = sender as shinsaUnit;
+		if (unit.PlayerNumber == CellGrid.CurrentPlayerNumber) {
+			StatsText.text = "";
+			swapPicts (sender as shinsaUnit, false);
+			swapMaterial (sender as shinsaUnit, false);
+		}
     }
     private void OnUnitHighlighted(object sender, EventArgs e)
     {
         var unit = sender as shinsaUnit;
-        swapPicts(unit, true);
-        StatsText.text = unit.UnitName /*+ "\nHit Points: " + unit.HitPoints +"/"+unit.TotalHitPoints + "\nAttack: " + unit.AttackFactor + "\nDefence: " + unit.DefenceFactor + */ + "\n Range:"   + unit.AttackRange;
-		swapMaterial (sender as shinsaUnit, true);
+		if (unit.PlayerNumber == CellGrid.CurrentPlayerNumber) {
+			swapPicts (unit, true);
+			StatsText.text = unit.UnitName /*+ "\nHit Points: " + unit.HitPoints +"/"+unit.TotalHitPoints + "\nAttack: " + unit.AttackFactor + "\nDefence: " + unit.DefenceFactor + */ + "\n Range:" + unit.AttackRange;
+			swapMaterial (sender as shinsaUnit, true);
+		}
     }
+
+	/// <summary>
+	/// Swaps to highlighting material.
+	/// </summary>
+	/// <param name="a">The alpha component.</param>
+	/// <param name="highlightIt">If set to <c>true</c> highlight it.</param>
 	private void swapMaterial(shinsaUnit a, bool highlightIt){
 		if (highlightIt) {
 			a.GetComponent<SpriteRenderer> ().material = UnitHighlightingMaterial;
 		} else {
 			a.GetComponent<SpriteRenderer> ().material = UnitDefaultMaterial;
 		}
-
 	}
 
     private void swapPicts(shinsaUnit unit, bool toImage)
