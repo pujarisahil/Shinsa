@@ -45,6 +45,7 @@ class Log
 	end
 
 	def printLog()
+		puts ""
 		puts "----#@player1 vs. #@player2----"
 		puts "Winner: #@winner"
 		puts ""

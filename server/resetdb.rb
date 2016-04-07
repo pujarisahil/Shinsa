@@ -8,7 +8,7 @@ begin
 	dbc.query("DROP TABLE log0;")
 	dbc.query("UPDATE log_schema SET next_log=0 WHERE next_log=1;")
 	puts ""
-	puts "Database Reset"
+	puts "****Database Reset****"
 	puts ""
 rescue Mysql::Error => e
 	puts "ERROR"

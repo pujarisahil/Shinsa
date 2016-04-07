@@ -13,7 +13,7 @@ account = getAccount("johndoe")
 puts ""
 puts "Username: #{account.getUsername()}"
 puts "Name: #{account.getRealname()}"
-puts "Rank: #{account.getRank()}"
+puts "Score: #{account.getScore()}"
 puts "Online: #{account.getOnlineStatus()}"
 puts "Number of Players Online: #{account.getAccountsOnline()}"
 puts ""
@@ -26,20 +26,27 @@ log.addToLog("Alice", 2, 12, 13)
 log.addToLog("Bob", 9, 28, 29)
 log.setWinner("Alice")
 log.setLoser("Bob")
+unit = "\u03BC".encode('utf-8')
+time = Time.now.usec
 log.printLog()
+puts ""
+puts "TIME: #{Time.now.usec - time} #{unit}s"
 
 saveLog(log)
-newlog = getLog(0)
 
+time = Time.now.usec
+newlog = getLog(0)
 newlog.printLog()
+puts
+puts "TIME: #{Time.now.usec - time} #{unit}s"
 
 #Reset Database
-require_relative 'resetdb'
+#require_relative 'resetdb'
 
 #Test leaderboard
-rankarray = getLeaderboard(5)
-puts "----Leaderboard----"
-for i in 0..rankarray.size-1
-        puts "#{i + 1} -- #{rankarray[i]}"
-end
-puts ""
+#rankarray = getLeaderboard(5)
+#puts "----Leaderboard----"
+#for i in 0..rankarray.size-1
+#	puts "#{i + 1} -- #{rankarray[i]}"
+#end
+#puts ""
