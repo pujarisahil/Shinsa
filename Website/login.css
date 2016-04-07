@@ -2,7 +2,14 @@
     color:#000;
     background-color:#fff;
 }
-
+.container {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-top: 100px;
+    position: relative;
+}
 .btn-facebook {
     color: #ffffff;
     -webkit-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
@@ -35,4 +42,4 @@
 .btn-facebook:active,
 .btn-facebook.active {
     background-color: #0d2456 \9 !important;
-} 
+}
