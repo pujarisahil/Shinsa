@@ -8,10 +8,7 @@ public class Minorite : shinsaUnit {
     public override List<Cell> GetAvailableDestinations(List<Cell> cells)
     {
         var ret = new List<Cell>();
-        var cellsInMovementRange = cells.FindAll(c => IsCellMovableTo(c) && c.GetDistance(Cell) <= MovementPoints);
-
-        var traversableCells = cells.FindAll(c => IsCellTraversable(c) && c.GetDistance(Cell) <= MovementPoints);
-        traversableCells.Add(Cell);
+        var cellsInMovementRange = cells.FindAll(c => IsCellMovableTo(c) && c.GetDistance(Cell) <= 2);
 
         foreach (var cellInRange in cellsInMovementRange)
         {

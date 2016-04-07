@@ -22,7 +22,6 @@ public class GuiController : MonoBehaviour
     void Start()
     {
         Time.timeScale = 1f;
-        //UnitImage.color = Color.gray;
         CellGrid.GameStarted += OnGameStarted;
         CellGrid.TurnEnded += OnTurnEnded;   
         CellGrid.GameEnded += OnGameEnded;

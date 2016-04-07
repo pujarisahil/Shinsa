@@ -7,6 +7,7 @@
 
     public override void Apply()
     {
+		//_unit.UnMark ();
         _unit.MarkAsFriendly();
     }
 

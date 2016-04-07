@@ -76,10 +76,16 @@ public abstract class Hexagon : Cell
         new Vector3(1, 1, 1), new Vector3(-1, 1, -1) };
     public static readonly Vector3[] _directions4 =  {
         new Vector3(+1, 0, -1)};
-	
 	public static readonly Vector3[] _directions5 = { 
 		new Vector3(+1, -1, 0), new Vector3(0, +1, -1)
 	};
+	public static readonly Vector3[] _directions6 = { 
+		new Vector3(+2, -1, -1), new Vector3(+1,+1,-2), new Vector3(-2, +1, +1), new Vector3(-1, -1, +2)
+	};
+	//1, -0.5, -0.5
+	//0.5, 0.5,-1
+	//-1,0.5,,0.5
+
 
     public override int GetDistance(Cell other)
     {
@@ -87,6 +93,8 @@ public abstract class Hexagon : Cell
         int distance = (int)(Mathf.Abs(CubeCoord.x - _other.CubeCoord.x) + Mathf.Abs(CubeCoord.y - _other.CubeCoord.y) + Mathf.Abs(CubeCoord.z - _other.CubeCoord.z)) / 2;
         return distance;
     }//Distance is given using Manhattan Norm.
+
+
     public override List<Cell> GetNeighbours(List<Cell> cells)
     {
         List<Cell> ret = new List<Cell>();
@@ -183,6 +191,29 @@ public abstract class Hexagon : Cell
         }
         return ret;
     }
+
+	public List<Cell> GetPerceptorCells(List<Cell> cells){
+		List<Cell> ret = new List<Cell>();
+		foreach (var direction in _directions6)
+		{
+			int i = 1;
+			while (i < 11)
+			{
+				var neighbour = cells.Find(c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction *i));
+				if (neighbour == null)
+					break;
+				else if (neighbour.IsTaken && neighbour.playerIndex != playerIndex) {
+					ret.Add (neighbour);	
+					break;
+				} else if (neighbour.IsTaken)
+					break;
+				ret.Add(neighbour);
+				i++;
+			}
+
+		}
+		return ret;
+	}
 
 	public List<Cell> GetEnemyOccupiedNeighbours(List<Cell> cells){
 		List<Cell> ret = new List<Cell> ();

@@ -35,29 +35,30 @@ class CellGridStateUnitSelected : CellGridState
         {
 			var path = _unit.FindPath(_unit.GetAvailableDestinations(_cellGrid.Cells), cell);
             _unit.Move(cell,path);
-			_cellGrid.CellGridState = new CellGridStateWaitingForInput (_cellGrid);
-            //_cellGrid.CellGridState = new CellGridStateUnitSelected(_cellGrid, _unit);
+
+			//End the turn
+			_cellGrid.EndTurn ();
         }
     }
     public override void OnUnitClicked(Unit unit)
     {
 		Debug.Log ("ZZ");
-        if (unit.Equals(_unit) || unit.isMoving)
-            return;
-
+		if (unit.Equals (_unit) || unit.isMoving) {
+			OnStateExit ();
+			_cellGrid.CellGridState = new CellGridStateWaitingForInput(_cellGrid);
+			return;
+		}
 		//check if unit is in its reachableEnemyList. if yes move. if no deny player
 		if (_unit.GetAvailableDestinations(_cellGrid.Cells).Contains(unit.Cell) && _unit.ActionPoints > 0)
         {
-			Debug.LogWarning ("sdadsa");
-			//_unit.DealDamage(unit);
+			Debug.LogWarning ("On unit Clicked, attack this enemy");
 			_unit.Move(unit.Cell,_unit.FindPath(_cellGrid.Cells, unit.Cell));
-           // _cellGrid.CellGridState = new CellGridStateUnitSelected(_cellGrid, _unit);
-			_cellGrid.CellGridState = new CellGridStateWaitingForInput (_cellGrid);
+			_cellGrid.EndTurn ();
         }
 
         if (unit.PlayerNumber.Equals(_unit.PlayerNumber))
         {
-			Debug.LogWarning ("this is equal");
+			Debug.LogWarning ("select another sa piece");
             _cellGrid.CellGridState = new CellGridStateUnitSelected(_cellGrid, unit);
         }
             
