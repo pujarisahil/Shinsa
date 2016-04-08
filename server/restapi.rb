@@ -47,7 +47,7 @@ end
 post '/logout' do
     begin
         username = params['username']
-        logout = DB.query "delete from loggedin where username like \"#{username}\""
+        DB.query "delete from loggedin where username like \"#{username}\""
         return { sucess: true }.to_json
     rescue
         return { sucess: false }.to_json
@@ -100,5 +100,19 @@ end
 post '/end_game' do # game ID -> sucess fail
 end
 
-post '/leaderboard' do # none -> leaderboard json
+get '/leaderboard' do # none -> leaderboard json
+  results = {}
+  leaders = DB.query("
+    SELECT username, score
+    FROM accounts
+    ORDER BY score DESC
+  ")
+
+  pos = 0
+  leaders.each do |l|
+    results.update({pos => l}) if l[1].to_i > 0
+    pos += 1
+  end
+
+  return results.to_json
 end
