@@ -1,0 +1,86 @@
+
+---- How to use the Account Class ----
+
+
+login("username") -- 1 Argument: String username of player
+	Returns Account Object
+	*Must be called whenever a player logs in
+
+getId() -- does not take any arguments
+	Returns Integer value of player id
+
+getUsername() -- does not take any arguments
+	Returns String value of player username
+
+getRealname() -- does not take any arguments
+	Returns String value of player real name
+	*Format of return: "[firstname] [lastname]"
+
+getGamesWon() -- does not take any arguments
+	Returns Integer value of player's number of games won
+
+getGamesPlayed() -- does not take any arguments
+	Returns Integer value of player's number of games played
+
+getScore() -- does not take any arguments
+	Returns Integer value of player's score
+
+gameStart(account) -- 1 Argument: Account object of opponent
+	Returns nothing 
+	[sets an instance variable used for later calculations]
+	*Must be called before a game begins
+
+gameWon() -- does not take any arguments
+	Returns nothing
+	[updates player score, games_played value, and games_won value]
+
+gameTied() -- does not take any arguments
+	Returns nothing
+	[updates player score and games_played value]
+
+gameLost() -- does not take any arguments
+	Returns nothing
+	[updates player score and games_played value]
+
+getFriendsList() -- does not take any arguments
+	Returns an Array of Friend Objects
+
+removeFriend(friend) -- 1 Argument: Username of friend to remove from friends list
+	Returns nothing
+
+requestFriend(player) -- 1 Argument: Username of player to request friendship of
+	Returns nothing
+
+acceptFriend(player) -- 1 Argument: Username of player to accept friend request from
+	Returns nothing
+
+denyFriend(player) -- 1 Argument: Username of player to deny friend request from
+	Returns nothing
+
+getAccountsOnline() -- does not take any arguments
+	Returns Integer value of the number of players online
+
+logout() -- does not take any arguments
+	Returns nothing
+	[updates database from Account object values]
+
+
+
+---- How to use the Friend Class ----
+
+
+getUsername() -- does not take any arguments
+	Returns String value of Friend's username
+
+getRealname() -- does not take any arguments
+	Returns String value of Friend's real name
+	*Format of return: "[firstname] [lastname]"
+
+getScore() -- does not take any arguments
+	Returns Integer value of Friend's score
+
+getOnline() -- does not take any arguments
+	Returns Boolean value of Friend's online status
+	*true if Friend is online, false otherwise
+
+
