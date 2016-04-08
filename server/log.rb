@@ -78,5 +78,5 @@ class LogEntry
 
 	def getEndPos()
 		return @endpos
-	end 
+	end
 end

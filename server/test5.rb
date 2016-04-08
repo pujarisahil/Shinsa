@@ -55,4 +55,3 @@ for i in 0..(john_friends.size - 1)
 	puts "FRIEND: #{john_friends[i].getRealname()}"
 end
 puts ""
-
