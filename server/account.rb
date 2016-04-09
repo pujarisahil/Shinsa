@@ -210,7 +210,6 @@ class Account
 
 	#
 	def getGamesPlayed()
-<<<<<<< HEAD
 		return Integer(@games_played)
 	end
 
@@ -221,9 +220,6 @@ class Account
 	#
 	def getScore()
 		return Integer(@score)
-=======
-		return @games_played
->>>>>>> af95dee6c8878fee588967ed5314c2a80d3ea23d
 	end
 
 
