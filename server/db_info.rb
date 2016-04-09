@@ -5,6 +5,11 @@
 @DB_PASSWORD = ''
 @DB_DATABASE = 'shinsa'
 
+DB_SERVER = 'localhost'
+DB_USER = 'root'
+DB_PASSWORD = ''
+DB_DATABASE = 'shinsa'
+
 @TESTDATA = true
 
 @accounts_schema = "accounts (

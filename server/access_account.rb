@@ -14,7 +14,7 @@ require_relative "id_convert"
 def getAccount(_username)
 	begin
 		# Establish connection with database
-		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_TABLE)
+		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE)
 
 		rs = dbc.query("SELECT * FROM accounts WHERE \
 			username='#{_username}';")
@@ -54,7 +54,7 @@ end
 def updateAccount(_account)
 	begin
 		# Establish connection with database
-		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_TABLE)
+		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE)
 
 		# Set values from Account object
 		id = _account.getId()
@@ -117,7 +117,7 @@ end
 def findId(_username)
 	begin
 		# Establish connection with database
-		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_TABLE)
+		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE)_
 		rs = dbc.query("SELECT id FROM accounts WHERE \
 			username='#{_username}';")
 		row = rs.fetch_row
@@ -146,7 +146,7 @@ end
 def getFriend(_id)
 	begin
 		# Establish connection with database
-		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_TABLE)
+		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE)
 		rs = dbc.query("SELECT username, firstname, lastname, score \
 			FROM accounts WHERE id='#{_id}';")
 		return rs.fetch_row
@@ -171,7 +171,7 @@ end
 def makeFriendRequest(_player, _myid)
 	begin
 		# Establish connection with database
-		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_TABLE)
+		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE)
 		rs = dbc.query("SELECT friend_req_rec FROM accounts WHERE \
 			username='#{_player}';")
 		row = rs.fetch_row
@@ -203,7 +203,7 @@ end
 def acceptFriendRequest(_player, _myid)
 	begin
 		# Establish connection with database
-		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_TABLE)
+		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE)
 
 		# Convert the base 10 id to base 62 for database storage
 		id62 = con10to62(_myid)
@@ -270,7 +270,7 @@ end
 def denyFriendRequest(_player, _myid)
 	begin
 		# Establish connection with database
-		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_TABLE)
+		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE)
 		
 		# Convert the base 10 id to base 62 for database storage
 		id62 = con10to62(_myid)
@@ -324,7 +324,7 @@ end
 #
 def destroyFriendship(_player, _myid)
 	begin
-		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_TABLE)
+		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE)
 		rs = dbc.query("SELECT friends_list FROM accounts WHERE \
 			username='#{_player}';")
 		row = rs.fetch_row
