@@ -1,7 +1,7 @@
 #!/usr/bin/ruby -w
 
-require_relative '../../db_info'
-require_relative '../../access_account'
+require_relative 'db_info'
+require_relative 'access_account'
 
 
 # Public: Search for players
