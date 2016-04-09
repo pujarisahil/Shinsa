@@ -7,7 +7,7 @@ require_relative "db_info"
 def getLeaderboard(num)
 	begin
 		ranks = Array.new
-		dbc = Mysql.new(@DB_SERVER, @DB_USER, @DB_PASSWORD, @DB_TABLE)
+		dbc = Mysql.new(@DB_SERVER, @DB_USER, @DB_PASSWORD, @DB_DATABASE)
 		q = dbc.query ("SELECT username FROM accounts WHERE score ORDER BY score DESC LIMIT #{num}")
 		n_rows = q.num_rows
 		n_rows.times do
