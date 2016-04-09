@@ -210,7 +210,6 @@ class Account
 
 	#
 	def getGamesPlayed()
-<<<<<<< HEAD
 		return Integer(@games_played)
 	end
 
@@ -221,9 +220,6 @@ class Account
 	#
 	def getScore()
 		return Integer(@score)
-=======
-		return @games_played
->>>>>>> af95dee6c8878fee588967ed5314c2a80d3ea23d
 	end
 
 
@@ -461,15 +457,15 @@ class Account
 			# Retrieve other player's Account
 			account = findAccount(player_id)
 			req_rec = account.getFriendReqRec()
-            if req_rec == nil then
-                temp_array = Array.new(1)
-                temp_array[0] = con10to62(@id)
-            else
-                temp_array = Array.new(req_rec.size + 1)
-                for i in 0..(req_rec.size - 1)
-				    temp_array[i] = req_rec
-                end
-                temp_array[req_rec.size] = con10to62(@id)
+            		if req_rec == nil then
+                		temp_array = Array.new(1)
+                		temp_array[0] = con10to62(@id)
+            		else
+                		temp_array = Array.new(req_rec.size + 1)
+                		for i in 0..(req_rec.size - 1)
+					temp_array[i] = req_rec
+                		end
+                		temp_array[req_rec.size] = con10to62(@id)
 			end
 			account.setFriendReqRec(temp_array)
 		else
@@ -653,7 +649,7 @@ class Account
 	# Returns true if _id account is online, false otherwise
 	#
 	def isOnline(_id)
-        _id = Integer(_id)
+        	_id = Integer(_id)
 		for i in 0..(@@players_online.size - 1)
 			if (@@players_online[i] != nil) && (_id == Integer(@@players_online[i])) then
 				return true
@@ -663,10 +659,10 @@ class Account
 	end
 
 
-    # Public: Called when a player logs out
-    #
+	# Public: Called when a player logs out
+	#
 	# Returns nothing
-    #
+	#
 	def logout()
 		for i in 0..(@@players_online.size - 1)
 			if (@@players_online[i] != nil) && (Integer(@@players_online[i]) == Integer(@id)) then
