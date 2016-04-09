@@ -1,0 +1,93 @@
+<% include partials/header %>
+
+<script>
+		window.fbAsyncInit = function() {
+			FB.init({
+				appId      : '611923268955973',
+				xfbml      : true,
+				version    : 'v2.5'
+			});
+
+			FB.getLoginStatus(function(response) {
+				if(response.status === 'connected') {
+					document.getElementById('status').innerHTML = 'Connected.';
+				} else if(response.stats === 'not_authorized') {
+					document.getElementById('status').innerHTML = 'Not logged in';
+				} else {
+					document.getElementById('status').innerHTML = 'Not logged in';
+				}
+			});
+		};
+
+		(function(d, s, id){
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) {return;}
+			js = d.createElement(s); js.id = id;
+			js.src="https://connect.facebook.net/en_US/all.js";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+
+		function login() {
+			FB.login(function(response) {
+				if(response.status === 'connected') {
+					getInfo();
+				} else if(response.stats === 'not_authorized') {
+					document.getElementById('status').innerHTML = 'Not logged in';
+				} else {
+					document.getElementById('status').innerHTML = 'Not logged in';
+				}
+			}, {scope: 'email, public_profile'});
+		}
+
+		function getInfo() {
+			FB.api('/me', 'GET', {fields: 'first_name, last_name, name, id'}, function(response) {
+				document.getElementById('status').innerHTML = response.name;
+				sessionStorage.setItem('UserName', response.name);
+			});
+		}
+
+	</script>
+
+	<div id="status">
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4 col-md-offset-4">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">Login to Shinsa</h3>
+					</div>
+					<div class="panel-body">
+						<form accept-charset="UTF-8" role="form">
+							<fieldset>
+								<!-- Email Input -->
+								<div class="form-group">
+									<input class="form-control" placeholder="yourmail@purdue.edu" name="email" type="text">
+								</div>
+								<!-- Password Input -->
+								<div class="form-group">
+									<input class="form-control" placeholder="Password" name="password" type="password" value="">
+								</div>
+								<!-- Remember me checkbox -->
+								<div class="checkbox">
+									<label>
+										<input name="remember" type="checkbox" value="Remember Me"> Remember Me
+									</label>
+								</div>
+								<!-- Login button -->
+								<input class="btn btn-lg btn-success btn-block" type="submit" value="Login">
+							</fieldset>
+						</form>
+						<hr/>
+						<center><h4>OR</h4></center>
+
+						<a class="btn btn-block btn-social btn-facebook" onclick="login()">
+							<span class="fa fa-facebook"></span> Sign in with Facebook
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<% include partials/footer %>
