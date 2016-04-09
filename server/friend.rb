@@ -17,17 +17,17 @@ class Friend
 
 	# Public: Returns username of Friend
 	#
-    # Returns Friend's username
+	# Returns Friend's username
 	#
-    def getUsername()
+	def getUsername()
 		return @username
 	end
 
 
 	# Public: Returns real name of Friend
 	#
-    # Returns Friend's real name
-    #
+	# Returns Friend's real name
+	#
 	def getRealname()
 		return @realname
 	end
@@ -35,8 +35,8 @@ class Friend
 
 	# Returns score of Friend
 	#
-    # Returns Friend's score
-    #
+	# Returns Friend's score
+	#
 	def getScore()
 		return @score
 	end
