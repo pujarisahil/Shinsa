@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+</head>
+<body onload="myFunction()" >
+	<script>
+		(function(d, s, id){
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) {return;}
+			js = d.createElement(s); js.id = id;
+			js.src="https://connect.facebook.net/en_US/all.js";
+			fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+		
+		window.fbAsyncInit = function() {
+			FB.init({
+				appId      : '611923268955973',
+				xfbml      : true,
+				version    : 'v2.5'
+			});
+		};
+
+		function login() {
+			FB.login(function(response) {
+				// document.getElementById("nameFunction").innerHTML = localStorage.getItem("UserName");
+				if(response.status === 'connected') {
+					console.log("something");
+					getInfo();
+					document.getElementById('status').innerHTML = "I was called";
+				} else if(response.stats === 'not_authorized') {
+					console.log("something");
+					document.getElementById('status').innerHTML = 'Not logged in';
+				} else {
+					console.log("something");
+					document.getElementById('status').innerHTML = 'Not logged in';
+				}
+			}, {scope: 'email, public_profile'});
+		}
+
+		function myfunction() {
+			console.log("I was run");
+		}
+
+		function getInfo() {
+			FB.api('/me', 'GET', {fields: 'first_name, last_name, name, id'}, function(response) {
+				// document.getElementById('status').innerHTML = response.name;
+				document.getElementById('nameFunction').innerHTML = "WTF BRO";
+				document.getElementById("nameFunction").innerHTML = localStorage.getItem("UserName");
+			});
+		}
+
+	</script>
+
+	<div id="status">
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12 col-sm-6 col-md-6">
+				<div class="well well-sm">
+					<div class="row">
+						<div class="col-sm-6 col-md-4">
+						</div>
+						<div class="col-sm-6 col-md-8">
+							<h4 id="nameFunction">jgjh</h4>
+							<small><cite title="San Francisco, USA">West Lafayette, IN <i class="glyphicon glyphicon-map-marker">
+							</i></cite></small>
+							<p>
+								<i class="glyphicon glyphicon-envelope"></i>pujarisahil@yahoo.co.in
+								<br />
+								<i class="glyphicon glyphicon-gift"></i>May 25, 1995
+								<br />
+								</i>Rating: </p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	</html>
