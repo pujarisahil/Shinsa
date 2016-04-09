@@ -102,6 +102,7 @@ li{
 	transform: rotate(-360deg);
 }
 a.up {
+	
 	background-color: rgba(1,151,171,1);
 	color: rgba(0,63,71,1);
 	border-color: rgba(0,63,71,.2);
