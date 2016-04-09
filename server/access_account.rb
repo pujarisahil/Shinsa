@@ -2,6 +2,7 @@
 
 require "mysql"
 require_relative "db_info"
+require_relative "id_convert"
 
 
 # Public: Builds and returns all account data
@@ -121,7 +122,7 @@ def findId(_username)
 			username='#{_username}';")
 		row = rs.fetch_row
 		id = row[0]
-		return id
+		return Integer(id)
 	rescue Mysql::Error => e
 		puts "ERROR"
 		puts "Error Code: #{e.errno}"
@@ -175,7 +176,8 @@ def makeFriendRequest(_player, _myid)
 			username='#{_player}';")
 		row = rs.fetch_row
 		old_queue = row[0]
-		if old_queue != nil then
+		if old_queue != nil && old_queue.length != 0 then
+            puts "old queue: >#{old_queue}<"
 			old_queue = "#{old_queue},"
 		end
 		rs = dbc.query("UPDATE accounts SET friend_req_rec=\
@@ -212,7 +214,7 @@ def acceptFriendRequest(_player, _myid)
 			username='#{_player}';")
 		row = rs.fetch_row
 		old_req_acc = row[0]
-		if old_req_acc != nil then
+		if old_req_acc != nil && old_req_acc.length != 0 then
 			old_req_acc = "#{old_req_acc},"
 		end
 		dbc.query("UPDATE accounts SET friend_req_acc=\
@@ -243,7 +245,7 @@ def acceptFriendRequest(_player, _myid)
 			username='#{_player}';")
 		row = rs.fetch_row
 		old_list = row[0]
-		if old_list != nil then
+		if old_list != nil && old_list.length != 0 then
 			old_list = "#{old_list},"
 		end
 		dbc.query("UPDATE accounts SET friends_list='#{old_list}#{id62}' \
@@ -279,7 +281,7 @@ def denyFriendRequest(_player, _myid)
 			username='#{_player}';")
 		row = rs.fetch_row
 		old_req_acc = row[0]
-		if old_req_acc != nil then
+		if old_req_acc != nil && old_req_acc.length != 0 then
 			old_req_acc = "#{old_req_acc},"
 		end
 		dbc.query("UPDATE accounts SET friend_req_den=\

@@ -4,25 +4,30 @@ require_relative 'access_account'
 
 #Friend Object
 class Friend
-	def initialize(_id)
+	def initialize(_account, _id)
+        puts "ok"
 		@id = _id
 		friend_data = getFriend(_id)
 		@username = friend_data[0]
 		@realname = "#{friend_data[1]} #{friend_data[2]}"
 		@score = friend_data[3]
-		@online = isOnline(_id)
+		@online = _account.isOnline(_id)
 	end
 
 
-	# Returns username of Friend
+	# Public: Returns username of Friend
 	#
-	def getUsername()
+    # Returns Friend's username
+	#
+    def getUsername()
 		return @username
 	end
 
 
-	# Returns real name of Friend
+	# Public: Returns real name of Friend
 	#
+    # Returns Friend's real name
+    #
 	def getRealname()
 		return @realname
 	end
@@ -30,6 +35,8 @@ class Friend
 
 	# Returns score of Friend
 	#
+    # Returns Friend's score
+    #
 	def getScore()
 		return @score
 	end

@@ -1,11 +1,15 @@
 #!/usr/bin/ruby -w
 
-#converts the base 66 id to base 10
+# Public: Converts the base 66 id to base 10
+#
+# id - Integer to convert from base 62 to base 10
+#
+# Returns converted number
+#
 def con62to10(id)
 	new_id = 0
 	for i in 0..3
 		c = id.getbyte(i)
-		puts "char: #{c}"
 		if c > 47 && c < 58
 			#0-9
 			num = c - 48
@@ -19,13 +23,17 @@ def con62to10(id)
 			#error
 			return -1
 		end
-		puts "new val: #{num}"
 		new_id += num * 62**(3 - i)
 	end
 	return Integer(new_id)
 end
 
-#converts the base 10 id to base 66
+# Public: Converts the base 10 id to base 62
+#
+# id - Integer to convert from base 10 to base 62
+#
+# Returns converted number
+#
 def con10to62(id)
 	new_id = "0000"
 	for i in 0..3

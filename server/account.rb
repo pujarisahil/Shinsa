@@ -1,9 +1,16 @@
 #!/usr/bin/ruby -w
 
 require_relative 'access_account'
+require_relative 'friend'
 require_relative 'score'
 
 
+# Public: Called as a player logs in
+#
+# _username - Username of player logging in
+#
+# Returns Account object of player
+#
 def login(_username)
 	account = getAccount(_username)
 	account.docAccount(account)
@@ -28,17 +35,14 @@ class Account
 
 		# class variable tracking total number of accounts online
 		@@num_of_players_online = 0
-
-		puts "Account Class Initialized"
 	end
 
 
-	# Retrieves Account Object and documents it
+	# Public: Documents Account object
 	#
-	# Params:
-	# +_username+:: Username of Account to retreive
+	# _account - Account to document
 	#
-	# Returns Account Object of +_username+
+	# Returns nothing
 	#
 	def docAccount(_account)
 		account_in_array = false
@@ -101,7 +105,8 @@ class Account
 				@friends_list[i] = con62to10(temp_friend_list[i])
 			end
 		else
-			@friends_list = Array.new(1)
+            @friends_list = nil
+			#@friends_list = Array.new(1)
 		end
 
 		# If the friend requests made list is not empty, split the string
@@ -113,7 +118,8 @@ class Account
 					con62to10(temp_friend_req_made[i])
 			end
 		else
-			@friend_req_made = Array.new(1)
+            @friend_req_made = nil
+			#@friend_req_made = Array.new(1)
 		end
 
 		# If the friend requests received list is not empty, split the string
@@ -124,7 +130,8 @@ class Account
 				@friend_req_rec[i] = con62to10(temp_friend_req_rec[i])
 			end
 		else
-			@friend_req_rec = Array.new(1)
+            @frined_req_rec = nil
+			#@friend_req_rec = Array.new(1)
 		end
 
 		# If the friend requests accepted list is not empty, split the string
@@ -177,7 +184,7 @@ class Account
 	# Returns player's id
 	#
 	def getId()
-		return @id
+		return Integer(@id)
 	end
 
 	
@@ -197,14 +204,23 @@ class Account
 
 	#
 	def getGamesWon()
-		return @games_won
+		return Integer(@games_won)
 	end
 
 
 	#
 	def getGamesPlayed()
-		return @games_played
-	end	
+		return Integer(@games_played)
+	end
+
+
+	# Public: Returns the score of the player
+	#
+	# Returns the score of the player
+	#
+	def getScore()
+		return Integer(@score)
+	end
 
 
 	# Public: Called when the player starts a game
@@ -249,26 +265,17 @@ class Account
 	end
 
 
-	# Public: Returns the score of the player
-	#
-	# Returns the score of the player
-	#
-	def getScore()
-		return @score
-	end
-
-
 	# Public: Retrieves Friends List
 	#
 	# Returns array of Friend Objects
 	#
 	def getFriendsList()
-		if @friend_array == nil then
-			return
-		end
+        if @friends_list == nil then
+            return nil
+        end
 		friend_array = Array.new(@friends_list.size)
-		for i in 0..(@friends_list - 1)
-			friend_array[i] = Friend.new(@friends_list[i])
+		for i in 0..(@friends_list.size - 1)
+			friend_array[i] = Friend.new(self, con62to10(@friends_list[i]))
 		end
 		
 		return friend_array
@@ -382,27 +389,20 @@ class Account
 	# Returns Account object requested
 	#
 	def findAccount(_id)
-		puts "findAccount(#{_id})"
+        _id = Integer(_id)
 		for i in 0..(@@accounts_online.size - 1)
-			puts "#{@@accounts_online[i]}"
-			obj = @@accounts_online[i]
-			puts "#{obj.getId()}"
-			if @@accounts_online[i] != nil then
-				puts "    NOT NULL"
-			end
 			if (@@accounts_online[i] != nil) && \
-				(_id == @@accounts_online[i].getId())
-				puts "Returning Account: #{@@accounts_online[i].getId()}"
+				(_id == @@accounts_online[i].getId()) then
 				return @@accounts_online[i]
 			end
 		end
+        return nil
 	end
 
 
-	# Removes _friend from friends list
+	# Public: Removes _friend from friends list
 	#
-	# Params:
-	# +_friend+:: username of friend to remove
+	# _friend - username of friend to remove
 	#
 	# Returns nothing
 	#
@@ -418,12 +418,12 @@ class Account
 			temp_array = Array.new(friends_array.size - 1)
 			j = 0
 			for i in 0..(friends_array.size - 1)
-				if con62to10(friends_array[i]) != friend_id then
+				if con62to10(friends_array[i]) != @id then
 					temp_array[j] = friends_array[i]
 					j += 1
 				end
 			end
-			friends_array = temp_array
+			account.setFriendsList(temp_array)
 		else
 			destroyFriendship(_friend, @id)
 		end	
@@ -441,10 +441,9 @@ class Account
 	end
 
 
-	# Called to make a friend request
+	# Public: Called to make a friend request
 	#
-	# Params:
-	# +_player+:: username of friend to request
+	# _player - username of friend to request
 	#
 	# Returns nothing
 	#
@@ -457,20 +456,25 @@ class Account
 		if isOnline(player_id) then
 			# Retrieve other player's Account
 			account = findAccount(player_id)
-			puts "#{account.getId()}"
 			req_rec = account.getFriendReqRec()
-			temp_array = Array.new(req_rec.size + 1)
-			for i in 0..(req_rec.size - 1)
-				temp_array[i] = req_rec
+            if req_rec == nil then
+                temp_array = Array.new(1)
+                temp_array[0] = con10to62(@id)
+            else
+                temp_array = Array.new(req_rec.size + 1)
+                for i in 0..(req_rec.size - 1)
+				    temp_array[i] = req_rec
+                end
+                temp_array[req_rec.size] = con10to62(@id)
 			end
-			temp_array[req_rec.size] = con10to62(player_id)
-			return temp_array
+			account.setFriendReqRec(temp_array)
 		else
 			makeFriendRequest(_player, @id)
 		end
 
 		# Add base 62 id of player whose friendship is requested
-		if @friend_req_made.size == 0 then
+		if @friend_req_made == nil then
+            @friend_req_made = Array.new(1)
 			@friend_req_made[0] = con10to62(player_id)
 		else
 			temp_array = Array.new(@friend_req_made.size + 1)
@@ -496,16 +500,21 @@ class Account
 		# If the player is online, adjust their Account Object
 		# Otherwise, adjust their database entry
 		if isOnline(player_id) then
-			account = getAccount(player_id)
+			account = findAccount(player_id)
 
 			# Adds accepting player's base 62 id to original
 			# player's 'friend_req_acc' value in their Account
 			req_acc = account.getFriendReqAcc()
-			temp_array = Array.new(req_acc.size + 1)
-			for i in 0..(req_acc.size - 1)
-				temp_array[i] = req_acc[i]
-			end
-			temp_array[req_acc.size] = con10to62(player_id)
+            if req_acc == nil then
+                temp_array = Array.new(1)
+                temp_array[0] = con10to62(@id)
+            else
+                temp_array = Array.new(req_acc.size + 1)
+                for i in 0..(req_acc.size - 1)
+                    temp_array[i] = req_acc[i]
+                end
+                temp_array[req_acc.size] = con10to62(@id)
+            end
 			account.setFriendReqAcc(temp_array)
 
 			# Removes accepting player's base 62 id from original
@@ -514,7 +523,7 @@ class Account
 			temp_array = Array.new(req_made.size - 1)
 			j = 0
 			for i in 0..(req_made.size - 1)
-				if con62to10(req_made[i]) != player_id then
+				if con62to10(req_made[i]) != @id then
 					temp_array[j] = req_made[i]
 					j += 1
 				end
@@ -524,18 +533,24 @@ class Account
 			# Adds accepting player's base 62 id to original
 			# player's 'friends_list' value in their Account
 			f_list = account.getFriendsListId()
-			temp_array = Array.new(f_list.size + 1)
-			for i in 0..(f_list.size - 1)
-				temp_array[i] = f_list[i]
-			end
-			temp_array[f_list.size] = con10to62(player_id)
+            if f_list == nil then
+                temp_array = Array.new(1)
+                temp_array[0] = con10to62(@id)
+            else
+                temp_array = Array.new(f_list.size + 1)
+                for i in 0..(f_list.size - 1)
+                    temp_array[i] = f_list[i]
+                end
+                temp_array[f_list.size] = con10to62(@id)
+            end
 			account.setFriendsList(temp_array)
 		else
 			acceptFriendRequest(_player, @id)
 		end
 
 		# Add the asking player to this player's friends_list
-		if @friends_list.size == 0 then
+		if @friends_list == nil then
+            @friends_list = Array.new(1)
 			@friends_list[0] = con10to62(player_id)
 		else
 			temp_array = Array.new(@friends_list.size + 1)
@@ -572,10 +587,22 @@ class Account
 		# If the player is online, adjust their Account Object
 		# Otherwise, adjust their database entry
 		if isOnline(player_id) then
-			account = getAccount(player_id)
+			account = findAccount(player_id)
 
-			# Add accepting player's base 62 id to original
+			# Add denying player's base 62 id to original
 			# player's 'friend_req_den' value in the Account
+            req_den = account.getFriendReqDen()
+            if req_den == nil then
+                temp_array = Array.new(1)
+                temp_array[0] = con10to62(@id)
+            else
+                temp_array = Array.new(req_den.size + 1)
+                for i in 0..(req_den.size - 1)
+                    temp_array[i] = req_den[i]
+                end
+                temp_array[req_den.size] = con10to62(@id)
+            end
+            account.setFriendReqDen(temp_array)
 
 			# Removes accepting player's base 62 id from original
 			# player's 'friend_req_made' value in the Account
@@ -583,7 +610,7 @@ class Account
 			temp_array = Array.new(req_made.size - 1)
 			j = 0
 			for i in 0..(req_made.size - 1)
-				if con62to10(req_made[i]) != player_id then
+				if con62to10(req_made[i]) != @id then
 					temp_array[j] = req_made[i]
 					j += 1
 				end
@@ -611,7 +638,7 @@ class Account
 	# Returns number of online players
 	#
 	def getAccountsOnline()
-		return @@num_of_players_online
+		return Integer(@@num_of_players_online)
 	end
 
 
@@ -622,8 +649,9 @@ class Account
 	# Returns true if _id account is online, false otherwise
 	#
 	def isOnline(_id)
-		for i in 0..(@@num_of_players_online - 1)
-			if _id == @@players_online[i] then
+        _id = Integer(_id)
+		for i in 0..(@@players_online.size - 1)
+			if (@@players_online[i] != nil) && (_id == Integer(@@players_online[i])) then
 				return true
 			end
 		end
@@ -631,18 +659,21 @@ class Account
 	end
 
 
-	#decreases number of players online
+    # Public: Called when a player logs out
+    #
+	# Returns nothing
+    #
 	def logout()
 		for i in 0..(@@players_online.size - 1)
-			if @@players_online[i] == @id then
-				@@player_online[i] = nil
+			if (@@players_online[i] != nil) && (Integer(@@players_online[i]) == Integer(@id)) then
+				@@players_online[i] = nil
 				break
 			end
 		end
 		updateAccount(findAccount(@id))
 		for i in 0..(@@accounts_online.size - 1)
 			if (@@accounts_online[i] != nil) && \
-					(@@accounts_online[i].getId() == @id)
+					(Integer(@@accounts_online[i].getId()) == Integer(@id))
 				@@accounts_online[i] = nil
 				break
 			end
