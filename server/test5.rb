@@ -81,7 +81,10 @@ if john_friends != nil then
     end
 end
 puts ""
+<<<<<<< HEAD
 
 # Log out
 john.logout()
 jane.logout()
+=======
+>>>>>>> af95dee6c8878fee588967ed5314c2a80d3ea23d

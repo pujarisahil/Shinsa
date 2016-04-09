@@ -44,7 +44,6 @@ if (isset($_POST["ResetPasswordForm"]))
                 $query->execute();
                 $conn = null;
             echo "Your password has been successfully reset.";
-
         }
         else
             echo "Your password's do not match.";

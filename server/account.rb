@@ -66,7 +66,7 @@ class Account
 				@@accounts_online = temp_array
 			end
 		end
-	end	
+	end
 
 
 	# Public: Initializes Account Object
@@ -92,7 +92,7 @@ class Account
 			_friend_req_den)
 		@id = Integer(_id)
 		@username = _username
-		@realname = "#{_firstname} #{_lastname}" 
+		@realname = "#{_firstname} #{_lastname}"
 		@score = Integer(_score)
 		@games_played = Integer(_games_played)
 		@games_won = Integer(_games_won)
@@ -187,7 +187,7 @@ class Account
 		return Integer(@id)
 	end
 
-	
+
 	# Returns player's username
 	#
 	def getUsername()
@@ -210,6 +210,7 @@ class Account
 
 	#
 	def getGamesPlayed()
+<<<<<<< HEAD
 		return Integer(@games_played)
 	end
 
@@ -220,6 +221,9 @@ class Account
 	#
 	def getScore()
 		return Integer(@score)
+=======
+		return @games_played
+>>>>>>> af95dee6c8878fee588967ed5314c2a80d3ea23d
 	end
 
 
@@ -277,7 +281,7 @@ class Account
 		for i in 0..(@friends_list.size - 1)
 			friend_array[i] = Friend.new(self, con62to10(@friends_list[i]))
 		end
-		
+
 		return friend_array
 	end
 
@@ -289,7 +293,7 @@ class Account
 	# Returns nothing
 	#
 	def setFriendsList(_friends_list)
-		@friends_list = _friends_list 
+		@friends_list = _friends_list
 	end
 
 
@@ -318,7 +322,7 @@ class Account
 	# Returns nothing
 	#
 	def setFriendReqMade(_friend_req_made)
-		@friend_req_made = _friend_req_made 
+		@friend_req_made = _friend_req_made
 	end
 
 
@@ -338,7 +342,7 @@ class Account
 	# Returns nothing
 	#
 	def setFriendReqRec(_friend_req_rec)
-		@friend_req_rec = _friend_req_rec 
+		@friend_req_rec = _friend_req_rec
 	end
 
 
@@ -358,7 +362,7 @@ class Account
 	# Returns nothing
 	#
 	def setFriendReqAcc(_friend_req_acc)
-		@friend_req_acc = _friend_req_acc 
+		@friend_req_acc = _friend_req_acc
 	end
 
 
@@ -378,7 +382,7 @@ class Account
 	# Returns nothing
 	#
 	def setFriendReqDen(_friend_req_den)
-		@friend_req_den = _friend_req_den 
+		@friend_req_den = _friend_req_den
 	end
 
 
@@ -409,7 +413,7 @@ class Account
 	def removeFriend(_friend)
 		#Get base 10 id of friend
 		friend_id = findId(_friend)
-		
+
 		# If the player is online, adjust their Account object
 		# Otherwise, adjust their database entry
 		if isOnline(friend_id) then
@@ -426,7 +430,7 @@ class Account
 			account.setFriendsList(temp_array)
 		else
 			destroyFriendship(_friend, @id)
-		end	
+		end
 
 		friendsSize = @friends_list.size
 		new_friends = Array.new(friendsSize - 1)
@@ -496,7 +500,7 @@ class Account
 	def acceptFriend(_player)
 		# Get base 10 id of _player
 		player_id = findId(_player)
-		
+
 		# If the player is online, adjust their Account Object
 		# Otherwise, adjust their database entry
 		if isOnline(player_id) then
