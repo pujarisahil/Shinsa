@@ -8,7 +8,7 @@ def getLeaderboard(num)
 	begin
 		ranks = Array.new
 		dbc = Mysql.new(@DB_SERVER, @DB_USER, @DB_PASSWORD, @DB_TABLE)
-		q = dbc.query ("SELECT username FROM accounts WHERE rank <= #{num} ORDER BY rank ASC")
+		q = dbc.query ("SELECT username FROM accounts WHERE score ORDER BY score DESC LIMIT #{num}")
 		n_rows = q.num_rows
 		n_rows.times do
 			row = q.fetch_row
