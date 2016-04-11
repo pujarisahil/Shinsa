@@ -40,9 +40,13 @@
 		}
 
 		function getInfo() {
-			FB.api('/me', 'GET', {fields: 'first_name, last_name, name, id'}, function(response) {
+			FB.api('/me', 'GET', {fields: 'first_name, last_name, id, gender, email'}, function(response) {
 				document.getElementById('status').innerHTML = response.name;
-				sessionStorage.setItem('UserName', response.name);
+				var str = Object.keys(response).map(function(key){ 
+  					return encodeURIComponent(key) + '=' + encodeURIComponent(response[key]); 
+				}).join('&');
+				
+				window.location.replace("/fblogin?" + str);
 			});
 		}
 
@@ -58,7 +62,7 @@
 						<h3 class="panel-title">Login to Shinsa</h3>
 					</div>
 					<div class="panel-body">
-						<form accept-charset="UTF-8" role="form">
+						<form action="/login" method="post" accept-charset="UTF-8" role="form">
 							<fieldset>
 								<!-- Email Input -->
 								<div class="form-group">
