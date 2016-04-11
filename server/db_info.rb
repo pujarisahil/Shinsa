@@ -21,7 +21,11 @@ DB_DATABASE = 'shinsa'
 	score INTEGER,
 	games_played INTEGER,
 	games_won INTEGER,
-	friends_list VARCHAR(500)
+	friends_list VARCHAR(500),
+	friend_req_made VARCHAR(50),
+	friend_req_rec VARCHAR(50),
+	friend_req_acc VARCHAR(50),
+	friend_req_den VARCHAR(50)
 )"
 
 @loggedin_schema = "loggedin (
