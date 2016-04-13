@@ -3,11 +3,13 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Networking;
 
 public class shinsaUnit : Unit
 {
     public Color LeadingColor;
     public string UnitName;
+
 
 	public override void Move(Cell destinationCell, List<Cell> path){
 		if (isMoving)
@@ -19,13 +21,17 @@ public class shinsaUnit : Unit
 			OccupyEnemyCell (destinationCell);
 		}
 
-		Cell = destinationCell;
+		this.Cell = destinationCell;
 		destinationCell.IsTaken = true;
 		destinationCell.setIndex (PlayerNumber);
 
+		//transform.position = new Vector3 (Cell.transform.position.x, Cell.transform.position.y, transform.position.z);
+		//CmdMoveIt (new Vector3 (Cell.transform.position.x, Cell.transform.position.y, transform.position.z));
 		transform.position = new Vector3 (Cell.transform.position.x, Cell.transform.position.y, transform.position.z);
-
+		Switch ();
 		SetState(new UnitStateNormal(this));
+
+
 		//this.OnUnitDeselected ();
 		/*
 		if (UnitMoved != null)
@@ -90,5 +96,23 @@ public class shinsaUnit : Unit
 	{
 		//return GetAvailableDestinations (_cellGrid.Cells).Contains (other.Cell);
 		return true;
+	}
+
+	public void Switch(){
+		
+		PhotonView view1 = this.gameObject.GetComponent<PhotonView> ();
+
+		view1.RPC ("cellChange", PhotonTargets.Others, Cell.gameObject.name);
+		view1.RPC ("ownerChange", PhotonTargets.Others, PhotonNetwork.otherPlayers[0].ID);
+	}
+
+	[PunRPC]
+	public void ownerChange(int id){
+		this.gameObject.GetComponent<PhotonView> ().TransferOwnership(id);
+	}
+
+	[PunRPC]
+	public void cellChange(String cellID){
+		Cell = GameObject.Find (cellID).GetComponent<Cell> ();
 	}
 }

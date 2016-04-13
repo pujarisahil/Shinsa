@@ -32,11 +32,12 @@ public class MyUnit : Unit
         UpdateHpBar();
     }
 
+	/*
     public override void Move(Cell destinationCell, List<Cell> path)
     {
         base.Move(destinationCell, path);
     }
-
+*/
     public override void MarkAsAttacking(Unit other)
     {
         StartCoroutine(Jerk(other));

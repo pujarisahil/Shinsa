@@ -28,6 +28,7 @@ public abstract class CellGridState
 
     public virtual void OnStateEnter()
     {
+		//Check the number of the player at the beginning of the game
         if (_cellGrid.Units.Select(u => u.PlayerNumber).Distinct().ToList().Count == 1)
         {
             _cellGrid.CellGridState = new CellGridStateGameOver(_cellGrid);

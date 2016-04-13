@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
-
+using UnityEngine.Networking;
+using Photon;
 /// <summary>
 /// Base class for all units in the game.
 /// </summary>
-public abstract class Unit : MonoBehaviour
+public abstract class Unit : UnityEngine.MonoBehaviour
 {
     /// <summary>
     /// UnitClicked event is invoked when user clicks the unit. It requires a collider on the unit game object to work.
@@ -32,6 +33,10 @@ public abstract class Unit : MonoBehaviour
     {
         UnitState.MakeTransition(state);
     }
+
+	void Update(){
+		Debug.LogWarning ("Unit ownership is:" + PhotonView.Get(gameObject).ownerId);
+	}
 
     public List<Buff> Buffs { get; private set; }
 
@@ -212,6 +217,7 @@ public abstract class Unit : MonoBehaviour
 	
 	}
 
+
     public virtual void Move(Cell destinationCell, List<Cell> path)
     {
         if (isMoving)
@@ -329,12 +335,12 @@ public abstract class Unit : MonoBehaviour
         }
         return ret;
     }
-
-	public virtual void setEnemyList(){
+	/*
+	[Command]
+	public void CmdMoveIt(Vector3 pos){
+		transform.position = pos;
 	}
-	public virtual void emptyEnemyList(){
-	}
-
+*/
     /// <summary>
     /// Gives visual indication that the unit is under attack.
     /// </summary>
