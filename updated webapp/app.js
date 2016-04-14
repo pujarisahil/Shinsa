@@ -132,7 +132,7 @@ app.get("/fblogin", function(req, res) {
             console.log(err);
         }
         if (docs.length){
-            var resultArray = [firstName, lastName, fbID, gender, email];
+            var resultArray = [firstName, lastName, fbID, gender, email, email];
             res.render("profile", {resultArray : resultArray});
         } else {
           res.send("An account with this Facebook ID does not exist. Please register");
@@ -314,13 +314,12 @@ app.get("/fbprofile", function(req, res) {
             } else {
               console.log("Created a new user");
               console.log(user);
-              var resultArray = [firstName, lastName, fbID, gender, email, 0];
+              var resultArray = [firstName, lastName, fbID, gender, email, 0, email];
               res.render("profile", {resultArray : resultArray});
             }
           });
         }
     });
-
   //console.log(firstName + "\n" + lastName + "\n" + fbID + "\n" + gender + "\n" + email);
 });
 
@@ -329,6 +328,10 @@ app.get("/fbprofile", function(req, res) {
 */
 app.get("/edit-profile", function(req, res) {
   res.render("editProfile");
+});
+
+app.get("/friendRequests", function(req, res){
+  res.send("We get it, you want friends");
 });
 
 app.get("/addFriend", function(req, res){
