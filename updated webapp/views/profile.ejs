@@ -79,7 +79,9 @@
 								<br />
 								</i>Rating: <%= resultArray[5] %></p>
 						</div>
-						<a class="btn btn-default" href="/addFriend?<%= resultArray[4] %>" role="button">Add Friend</a>
+						<% if(resultArray[4] != resultArray[resultArray.length - 1]) {%>
+							<a class="btn btn-default" href="/addFriend?<%= resultArray[4] %>&<%= resultArray[resultArray.length - 1] %>" role="button">Add Friend</a>
+						<% } %>
 					</div>
 				</div>
 			</div>
