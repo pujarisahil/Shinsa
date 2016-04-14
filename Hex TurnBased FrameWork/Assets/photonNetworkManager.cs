@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using Photon;
 
@@ -58,7 +58,7 @@ public class photonNetworkManager : Photon.PunBehaviour {
 
 	void OnPhotonRandomJoinFailed(){
 		Debug.Log ("we create a room");
-		PhotonNetwork.CreateRoom (null);
+		PhotonNetwork.CreateRoom (null, new RoomOptions(){maxPlayers = 2}, null);
 	}
 
 	void Update(){
