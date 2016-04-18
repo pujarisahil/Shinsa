@@ -1,7 +1,10 @@
-var express = require("express");
-var app = express();
-var mongoose = require("mongoose");
-var bodyParser = require("body-parser");
+var express               =   require("express"),
+    app                   =   express(),
+    mongoose              =   require("mongoose"),
+    bodyParser            =   require("body-parser"),
+    LocalStrategy         =   require("passport-local"),
+    passportLocalMongoose =   require("passport-local-mongoose");
+
 mongoose.connect("mongodb://localhost/users");
 
 
@@ -22,22 +25,28 @@ var userSchema = new mongoose.Schema({
 });
 
 //Schema of a friend request
-var requestsSchema = new mongoose.Schema({
+var requestsSchemaTo = new mongoose.Schema({
     requesterEmail: String,
     requestedOfEmail: [String],
     dateRequested: { type: Date, default: Date.now },
     timeRequested: { type : Date, default: Date.now }
 });
 
+var requestsSchemaFrom = new mongoose.Schema({
+    user: String,
+    requesters: [String]
+});
+
 //Schema of list of friends
 var friendSchema = new mongoose.Schema({
-  email1: String,
-  email2: String
+  user: String,
+  friends: [String]
 });
 
 var User = mongoose.model("User", userSchema);
-var FriendRequest = mongoose.model("FriendRequest", requestsSchema);
-var Friend = mongoose.model("Friend", friendSchema);
+var FriendRequest = mongoose.model("FriendRequest", requestsSchemaTo);
+var FriendRequest2 = mongoose.model("FriendRequest2", requestsSchemaFrom);
+var FriendList = mongoose.model("Friend", friendSchema);
 
 app.set("view engine", "ejs");
 
@@ -79,7 +88,7 @@ app.post("/register", function(req, res) {
             res.send("An account already exists with this email ID");
             check = true;
         } else {
-          resultArray = [firstName, lastName, day, gender, email, 0, month, year, gender];
+          resultArray = [firstName, lastName, day, gender, email, 0, month, year, gender, email];
           User.create(
           {
             firstName: firstName,
@@ -290,7 +299,7 @@ app.get("/fbprofile", function(req, res) {
   var email = (temp3[4].split("="))[1];
   email = email.replace("%40", "@");
   
-  User.find({fbID : fbID}, function (err, docs) {
+    User.find({fbID : fbID}, function (err, docs) {
         if(err) {
             console.log(err);
         }
@@ -330,19 +339,37 @@ app.get("/edit-profile", function(req, res) {
   res.render("editProfile");
 });
 
-app.get("/friendRequests", function(req, res){
-  res.send("We get it, you want friends");
+app.get("/friendRequests?", function(req, res) {
+      var temp = req.url.split("?");
+      var requestedOf = temp[1];
+    
+      FriendRequest2.find({user : requestedOf}, function (err, docs) {
+            if(err) {
+              console.log(err);
+            } 
+            if (docs.length){
+              var myObj = JSON.parse(JSON.stringify(docs));
+              var myObj2 = myObj[0];
+              var allRequests = myObj2['requesters'];
+              allRequests.push(requestedOf);
+              
+              res.render("friendRequests", {returnArray : allRequests});
+            } else {
+              console.log("He has no friend requests");
+              res.send("We get it, you want friends");
+            }
+      });
 });
 
 app.get("/addFriend", function(req, res){
-  var temp = req.url.split("?");
-  var requestedOf = temp[1].replace("%20", "");
-  var temp3 = requestedOf.split("&");
-  requestedOf = temp3[0];
-  var requester = temp3[1];
-  requester = requester.replace("%20", "");
-  console.log("Requester is " + requester);
-  console.log("Requested of is " + requestedOf);
+      var temp = req.url.split("?");
+      var requestedOf = temp[1].replace("%20", "");
+      var temp3 = requestedOf.split("&");
+      requestedOf = temp3[0];
+      var requester = temp3[1];
+      requester = requester.replace("%20", "");
+      console.log("Requester is " + requester);
+      console.log("Requested of is " + requestedOf);
       FriendRequest.find({requesterEmail : requester}, function (err, docs) {
             if(err) {
               console.log(err);
@@ -385,8 +412,60 @@ app.get("/addFriend", function(req, res){
               }
       } else {
               var allRequests = [];
+              allRequests.push(requestedOf);
+                
+              ///HERHEHERHEHEHRHERHEHREHRHERHERHEREHRHE
+              FriendRequest2.find({user : requestedOf}, function (err, docs) {
+                if(err) {
+                  console.log(err);
+                } 
+                if (docs.length){
               
-                allRequests.push(requestedOf);
+                console.log('Name exists already');
+              
+                var myObj = JSON.parse(JSON.stringify(docs));
+                var myObj2 = myObj[0]
+                var allRequests = myObj2['requesters'];
+                
+                
+                  allRequests.push(requester);
+                  console.log("Requests array now has " + allRequests);
+                  var tempRequest = new FriendRequest({
+                        user: requestedOf,
+                        requesters: allRequests
+                  });
+                  
+                  // Convert the Model instance to a simple object using Model's 'toObject' function
+                  // to prevent weirdness like infinite looping...
+                  var upsertData = tempRequest.toObject();
+                  
+                  // Delete the _id property, otherwise Mongo will return a "Mod on _id not allowed" error
+                  delete upsertData._id;
+                  
+                  // Do the upsert, which works like this: If no Contact document exists with 
+                  // _id = contact.id, then create a new doc using upsertData.
+                  // Otherwise, update the existing doc with upsertData
+                  FriendRequest2.update({user: requestedOf}, upsertData, {upsert: true}, function(err, docs) {
+                    if(err) {
+                      res.send("There was error in updating");
+                    }
+                  });
+                } else {
+                  var usersRequested = [];
+                  usersRequested.push(requester);
+                  FriendRequest2.create(
+                  {
+                    user: requestedOf,
+                    requesters: usersRequested
+                  }, function(err, user) {
+                    if(err) {
+                      console.log(err);
+                    } else {
+                      console.log("Oh man, I added the request properly");
+                    }
+                  });
+                }
+              });
                 console.log("ELSE : Requests array now has " + allRequests);
                 var tempRequest = new FriendRequest({
                       requesterEmail: requester,
@@ -411,10 +490,160 @@ app.get("/addFriend", function(req, res){
                   }
                 });
                 res.send("Done");
-      }
-    });
+        }
+      });
 });
 
+app.get("/acceptRequest?", function(req, res) {
+    var temp = req.url.split("?");
+    var approveOf = temp[1].replace("%20", "");
+    
+    var temp2 = approveOf.split("&");
+    console.log(temp2);
+    
+    var approver = temp2;
+    approver = approver[1];
+    
+    approveOf = approveOf.split("&");
+    approveOf = approveOf[0];
+    
+    FriendRequest2.find({user : approver}, function (err, docs) {
+      if(err) {
+        console.log(err);
+      } 
+      if (docs.length){
+                var myObj = JSON.parse(JSON.stringify(docs));
+                var myObj2 = myObj[0]
+                
+                var allRequests = myObj2['requesters'];
+                
+                var indexToRemove = allRequests.indexOf(approveOf);
+                var removedElement = allRequests.splice(indexToRemove, 1);
+                
+                var tempRequest = new FriendRequest2({
+                      user: approver,
+                      requesters: allRequests
+                });
+                
+                FriendList.find({user : approver}, function (err, docs) {
+                  if(err) {
+                    console.log(err);
+                  }
+                  if(docs.length) {
+                      var myObj = JSON.parse(JSON.stringify(docs));
+                      var myObj2 = myObj[0];
+                      var friends = myObj2['friends'];
+                      
+                      friends.push(approveOf);
+                      var tempRequest = new FriendList({
+                        user: approver,
+                        friends: friends
+                      });
+                      
+                      var upsertData = tempRequest.toObject();
+                
+                      delete upsertData._id;
+                      
+                      FriendList.update({user: approver}, upsertData, {upsert: true}, function(err, docs) {
+                        if(err) {
+                          res.send("There was error in updating");
+                        }
+                      });
+                  } else {
+                    var myarray = [];
+                    myarray.push(approveOf);
+                    console.log("Friends now has " + myarray);
+                    FriendList.create(
+                    {
+                      user: approver,
+                      friends: myarray
+                    }, function(err, user) {
+                      if(err) {
+                        console.log(err);
+                      } else {
+                        console.log("Friend " + approveOf + " has been added to " + approver);
+                      }
+                    });
+                  }
+                });
+                
+                FriendList.find({user : approveOf}, function (err, docs) {
+                  if(err) {
+                    console.log(err);
+                  }
+                  if(docs.length) {
+                      var myObj = JSON.parse(JSON.stringify(docs));
+                      var myObj2 = myObj[0];
+                      var friends = myObj2['friends'];
+                      
+                      friends.push(approver);
+                      
+                      var tempRequest = new FriendList({
+                        user: approveOf,
+                        friends: friends
+                      });
+                      
+                      var upsertData = tempRequest.toObject();
+                
+                      delete upsertData._id;
+                      
+                      FriendList.update({user: approveOf}, upsertData, {upsert: true}, function(err, docs) {
+                        if(err) {
+                          res.send("There was error in updating");
+                        }
+                      });
+                  } else {
+                    var myarray = [];
+                    myarray.push(approver);
+                    FriendList.create(
+                    {
+                      user: approveOf,
+                      friends: myarray
+                    }, function(err, user) {
+                      if(err) {
+                        console.log(err);
+                      } else {
+                        console.log("Friend " + approver + " has been added to " + approveOf);
+                      }
+                    });
+                  }
+                });
+                
+                var upsertData = tempRequest.toObject();
+                
+                delete upsertData._id;
+                
+                FriendRequest2.update({user: approver}, upsertData, {upsert: true}, function(err, docs) {
+                  if(err) {
+                    res.send("There was error in updating");
+                  }
+                });
+      }
+    });
+    
+    res.send(approveOf);
+    
+});
+
+
+app.get("/showFriends?", function(req, res) {
+  var temp = req.url.split("?");
+  var user = temp[1].replace("%20", "");
+  
+  FriendList.find({user : user}, function (err, docs) {
+    if(err) {
+      console.log(err);
+    }
+    if(docs.length) {
+        var myObj = JSON.parse(JSON.stringify(docs));
+        var myObj2 = myObj[0];
+        var friends = myObj2['friends'];
+        console.log("I was here");
+        console.log(friends);
+        res.render("showFriends", {returnArray : friends});
+    }
+  });
+});
 /*
 * Routes to the leaderboard page
 */
