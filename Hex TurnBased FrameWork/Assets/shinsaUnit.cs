@@ -126,6 +126,18 @@ public class shinsaUnit : Unit
 	//sync Cell in the Unit Script on the other side
 	[PunRPC]
 	public void cellChange(String cellID){
+		
+		Cell.IsTaken = false;
+		Cell.setIndex (-1);
 		Cell = GameObject.Find (cellID).GetComponent<Cell> ();
+		/*
+		if (Cell.playerIndex != PlayerNumber && Cell.IsTaken) {
+			//OccupyEnemyCell (Cell);
+			GameObject.Find ("CellGrid").GetComponent<CellGrid> ().Units.Find (c => c.Cell == destinationCell).OnDestroyed ();
+
+		}
+		*/
+		Cell.IsTaken = true;
+		Cell.setIndex (PlayerNumber);
 	}
 }
