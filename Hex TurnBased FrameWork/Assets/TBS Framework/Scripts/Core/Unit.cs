@@ -139,7 +139,8 @@ public abstract class Unit : UnityEngine.MonoBehaviour
     {
         Cell.IsTaken = false;
         MarkAsDestroyed();
-        Destroy(gameObject);
+		gameObject.SetActive (false);
+		//Destroy(gameObject);
     }
 
     /// <summary>
@@ -212,11 +213,13 @@ public abstract class Unit : UnityEngine.MonoBehaviour
         }
     }
 
-	public virtual void OccupyEnemyCell(Cell destinationCell){
-		GameObject.Find ("CellGrid").GetComponent<CellGrid> ().Units.Find (c => c.Cell == destinationCell).OnDestroyed ();
-	
-	}
 
+	[PunRPC]
+	public virtual void OccupyEnemyCell(String destinationCell){
+		Debug.LogWarning ("Occupy that enemy cell");
+		GameObject.Find ("CellGrid").GetComponent<CellGrid> ().Units.Find (c => c.Cell.gameObject.name == destinationCell).OnDestroyed ();
+
+	}
 
     public virtual void Move(Cell destinationCell, List<Cell> path)
     {
@@ -231,9 +234,10 @@ public abstract class Unit : UnityEngine.MonoBehaviour
 
         Cell.IsTaken = false;
 		Cell.setIndex (-1);
+
 		if (destinationCell.playerIndex != PlayerNumber && destinationCell.playerIndex != -1) {
 			Debug.Log ("haha its here");
-			OccupyEnemyCell (destinationCell);
+			OccupyEnemyCell (destinationCell.name);
 		}
         Cell = destinationCell;
         destinationCell.IsTaken = true;

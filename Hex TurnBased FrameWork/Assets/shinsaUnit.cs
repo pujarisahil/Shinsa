@@ -14,6 +14,8 @@ public class shinsaUnit : Unit
 		PlayerNumber = -1;
 	}
 
+
+
 	public override void Move(Cell destinationCell, List<Cell> path){
 		if (isMoving)
 			return;
@@ -21,19 +23,16 @@ public class shinsaUnit : Unit
 		Cell.setIndex (-1);
 		if (destinationCell.playerIndex != PlayerNumber && destinationCell.playerIndex != -1) {
 			Debug.Log ("shinsa Unit moves");
-			OccupyEnemyCell (destinationCell);
+			GetComponent<PhotonView> ().RPC ("OccupyEnemyCell", PhotonTargets.All, destinationCell.name);
 		}
 
 		this.Cell = destinationCell;
 		destinationCell.IsTaken = true;
 		destinationCell.setIndex (PlayerNumber);
 
-		//transform.position = new Vector3 (Cell.transform.position.x, Cell.transform.position.y, transform.position.z);
-		//CmdMoveIt (new Vector3 (Cell.transform.position.x, Cell.transform.position.y, transform.position.z));
 		transform.position = new Vector3 (Cell.transform.position.x, Cell.transform.position.y, transform.position.z);
 		Switch ();
 		SetState(new UnitStateNormal(this));
-
 
 		//this.OnUnitDeselected ();
 		/*
@@ -48,8 +47,6 @@ public class shinsaUnit : Unit
         GetComponent<SpriteRenderer>().color = LeadingColor;
 		Cell.setIndex (PlayerNumber);
 		Cell.IsTaken = true;
-		//ReachableEnemyCellList = new List<Cell> ();
-		//setEnemyList ();
     }
 
     public override void MarkAsAttacking(Unit other)
@@ -65,12 +62,10 @@ public class shinsaUnit : Unit
     public override void MarkAsDestroyed()
     {
 		Debug.Log ("haha");
-        //throw new NotImplementedException();
     }
 
     public override void MarkAsFinished()
     {
-        //meObject.Find("CellGrid2").GetComponent<CellGrid>().EndTurn();
 		Debug.LogWarning("fnnisss");
     }
 
@@ -92,12 +87,13 @@ public class shinsaUnit : Unit
 
     public override void UnMark()
     {
-        GetComponent<SpriteRenderer>().color = LeadingColor;
-    }
+		if (gameObject != null && gameObject.GetComponent<SpriteRenderer>() != null) {
+			GetComponent<SpriteRenderer> ().color = LeadingColor;
+		}
+	}
 
 	public override bool IsUnitAttackable (Unit other, Cell sourceCell)
 	{
-		//return GetAvailableDestinations (_cellGrid.Cells).Contains (other.Cell);
 		return true;
 	}
 		
@@ -130,13 +126,6 @@ public class shinsaUnit : Unit
 		Cell.IsTaken = false;
 		Cell.setIndex (-1);
 		Cell = GameObject.Find (cellID).GetComponent<Cell> ();
-		/*
-		if (Cell.playerIndex != PlayerNumber && Cell.IsTaken) {
-			//OccupyEnemyCell (Cell);
-			GameObject.Find ("CellGrid").GetComponent<CellGrid> ().Units.Find (c => c.Cell == destinationCell).OnDestroyed ();
-
-		}
-		*/
 		Cell.IsTaken = true;
 		Cell.setIndex (PlayerNumber);
 	}

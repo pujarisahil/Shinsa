@@ -37,9 +37,6 @@ class CellGridStateUnitSelected : CellGridState
 			var path = _unit.FindPath(_unit.GetAvailableDestinations(_cellGrid.Cells), cell);
 
 			_unit.Move(cell,path);
-			//PhotonView.Get(_unit.gameObject).TransferOwnership(1);
-			//GameObject.Find("NetworkManager").GetComponent<photonNetworkManager>().transferOwnership();
-			//_unit.Move (cell, path);
 			_cellGrid.EndTurn ();
         }
     }
@@ -55,7 +52,8 @@ class CellGridStateUnitSelected : CellGridState
 		if (_unit.GetAvailableDestinations(_cellGrid.Cells).Contains(unit.Cell) && _unit.ActionPoints > 0)
         {
 			Debug.LogWarning ("On unit Clicked, attack this enemy");
-			_unit.Move(unit.Cell,_unit.FindPath(_cellGrid.Cells, unit.Cell));
+			//_unit.Move(unit.Cell,_unit.FindPath(_cellGrid.Cells, unit.Cell));
+			_unit.Move(unit.Cell,_unit.FindPath(_unit.GetAvailableDestinations(_cellGrid.Cells), unit.Cell));
 			_cellGrid.EndTurn ();
         }
 

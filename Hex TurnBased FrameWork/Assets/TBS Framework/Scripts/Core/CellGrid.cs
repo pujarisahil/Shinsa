@@ -151,23 +151,15 @@ public class CellGrid : MonoBehaviour
 		Units.FindAll(u => u.PlayerNumber.Equals(PhotonNetwork.player.ID)).ForEach(u => { u.OnTurnEnd(); });
 
 
-		//change playernumber 
-		/*
-		if (CurrentPlayerNumber == 1) {
-			CurrentPlayerNumber = 2;
-		} else
-			CurrentPlayerNumber = 1;
-		*/
         if (TurnEnded != null)
             TurnEnded.Invoke(this, new EventArgs());
+		
+		Debug.Log ("this reaches to here!@#WEAAFWFEFAWEFADASAEFA");
 
 		//GameObject.Find ("NetworkManager").GetComponent<photonNetworkManager> ().changeTurnOnFly ();
 		GameObject.Find ("NetworkManager").GetComponent<PhotonView> ().RPC ("changeTurnOnFly",PhotonTargets.All);
 		boolLock = false;
-		CurrentPlayerNumber = GameObject.Find ("NetworkManager").GetComponent<photonNetworkManager> ().currentTurnOwner;
-		//GameObject.Find ("NetworkManager").GetComponent<photonNetworkManager> ()
-        //Units.FindAll(u => u.PlayerNumber.Equals(CurrentPlayerNumber)).ForEach(u => { u.OnTurnStart(); });
-        //Players.Find(p => p.PlayerNumber.Equals(CurrentPlayerNumber)).Play(this);     
+		CurrentPlayerNumber = GameObject.Find ("NetworkManager").GetComponent<photonNetworkManager> ().currentTurnOwner;   
     }
 
 	public void StartTurn(){
