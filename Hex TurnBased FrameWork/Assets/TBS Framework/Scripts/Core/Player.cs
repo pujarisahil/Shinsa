@@ -1,12 +1,21 @@
 ﻿using UnityEngine;
+using Photon;
 
-public abstract class Player : MonoBehaviour
+public abstract class Player : UnityEngine.MonoBehaviour
 {
-    public int PlayerNumber;  
+    public int PlayerNumber;
+	public string unitSetName;
 
-	void Start(){
-		PlayerNumber = GameObject.Find ("Players").transform.childCount;
+	void Awake(){
+		PlayerNumber = GetComponent<PhotonView> ().ownerId;
+		if (PlayerNumber > 1) {
+			this.unitSetName = "UnitSet1"; 
+		} else {
+			this.unitSetName = "UnitSet0";
+		}
+		//this.unitSetName = "UnitSet" + GameObject.Find ("Players").transform.childCount.ToString();
 		gameObject.transform.SetParent (GameObject.Find ("Players").transform);
+
 	}
 
     /// <summary>

@@ -37,8 +37,6 @@ class CellGridStateUnitSelected : CellGridState
 			var path = _unit.FindPath(_unit.GetAvailableDestinations(_cellGrid.Cells), cell);
 
 			_unit.Move(cell,path);
-			//PhotonView.Get (_unit.gameObject).RPC ("Move", PhotonTargets.All, cell, path);
-			//End the turn
 			//PhotonView.Get(_unit.gameObject).TransferOwnership(1);
 			//GameObject.Find("NetworkManager").GetComponent<photonNetworkManager>().transferOwnership();
 			//_unit.Move (cell, path);

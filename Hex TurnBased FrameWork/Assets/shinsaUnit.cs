@@ -10,6 +10,9 @@ public class shinsaUnit : Unit
     public Color LeadingColor;
     public string UnitName;
 
+	void Start(){
+		PlayerNumber = -1;
+	}
 
 	public override void Move(Cell destinationCell, List<Cell> path){
 		if (isMoving)
@@ -97,6 +100,10 @@ public class shinsaUnit : Unit
 		//return GetAvailableDestinations (_cellGrid.Cells).Contains (other.Cell);
 		return true;
 	}
+		
+	public void setNumber(int index){
+		PlayerNumber = index;
+	}
 
 	public void Switch(){
 		
@@ -105,12 +112,18 @@ public class shinsaUnit : Unit
 		view1.RPC ("cellChange", PhotonTargets.Others, Cell.gameObject.name);
 		view1.RPC ("ownerChange", PhotonTargets.Others, PhotonNetwork.otherPlayers[0].ID);
 	}
-
+		
 	[PunRPC]
 	public void ownerChange(int id){
-		this.gameObject.GetComponent<PhotonView> ().TransferOwnership(id);
+		//this.gameObject.GetComponent<PhotonView> ().TransferOwnership(id);
+		//!!disable all the colliders on Units when the current round is on the other side
+		foreach (PhotonView a in transform.parent.GetComponentsInChildren<PhotonView>()) {
+			a.TransferOwnership (id);
+		}
+
 	}
 
+	//sync Cell in the Unit Script on the other side
 	[PunRPC]
 	public void cellChange(String cellID){
 		Cell = GameObject.Find (cellID).GetComponent<Cell> ();

@@ -9,6 +9,9 @@ public class playerNumberCheck : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (transform.childCount > 1 && !lok) {
+			//don't use tranform.getChild()
+			//starting doing set up here
+
 			grid.enabled = true;
 			lok = false;
 		}

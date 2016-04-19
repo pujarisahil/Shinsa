@@ -9,7 +9,9 @@ using System;
 /// </summary>
 public class CellGrid : MonoBehaviour
 {
-    public event EventHandler GameStarted;
+	public bool boolLock = false;
+
+	public event EventHandler GameStarted;
     public event EventHandler GameEnded;
     public event EventHandler TurnEnded;
     
@@ -126,8 +128,14 @@ public class CellGrid : MonoBehaviour
         if(GameStarted != null)
             GameStarted.Invoke(this, new EventArgs());
 
-        Units.FindAll(u => u.PlayerNumber.Equals(CurrentPlayerNumber)).ForEach(u => { u.OnTurnStart(); });
-        Players.Find(p => p.PlayerNumber.Equals(CurrentPlayerNumber)).Play(this);
+		CurrentPlayerNumber = GameObject.Find ("NetworkManager").GetComponent<photonNetworkManager> ().currentTurnOwner;
+		if (photonNetworkManager.thisPlayerNumber == CurrentPlayerNumber) {
+			Units.FindAll (u => u.PlayerNumber.Equals (CurrentPlayerNumber)).ForEach (u => {
+				u.OnTurnStart ();
+			});
+			Players.Find (p => p.PlayerNumber.Equals (CurrentPlayerNumber)).Play (this);
+		}
+
     }
     /// <summary>
     /// Method makes turn transitions. It is called by player at the end of his turn.
@@ -139,20 +147,43 @@ public class CellGrid : MonoBehaviour
             return;
         }
         CellGridState = new CellGridStateTurnChanging(this);
+		//Units.FindAll(u => u.PlayerNumber.Equals(CurrentPlayerNumber)).ForEach(u => { u.OnTurnEnd(); });
+		Units.FindAll(u => u.PlayerNumber.Equals(PhotonNetwork.player.ID)).ForEach(u => { u.OnTurnEnd(); });
 
-        Units.FindAll(u => u.PlayerNumber.Equals(CurrentPlayerNumber)).ForEach(u => { u.OnTurnEnd(); });
 
-        CurrentPlayerNumber = (CurrentPlayerNumber + 1) % NumberOfPlayers;
-        while (Units.FindAll(u => u.PlayerNumber.Equals(CurrentPlayerNumber)).Count == 0)
-        {
-            CurrentPlayerNumber = (CurrentPlayerNumber + 1)%NumberOfPlayers;
-        }//Skipping players that are defeated.
-
+		//change playernumber 
+		/*
+		if (CurrentPlayerNumber == 1) {
+			CurrentPlayerNumber = 2;
+		} else
+			CurrentPlayerNumber = 1;
+		*/
         if (TurnEnded != null)
             TurnEnded.Invoke(this, new EventArgs());
 
-        Units.FindAll(u => u.PlayerNumber.Equals(CurrentPlayerNumber)).ForEach(u => { u.OnTurnStart(); });
-        Players.Find(p => p.PlayerNumber.Equals(CurrentPlayerNumber)).Play(this);     
+		//GameObject.Find ("NetworkManager").GetComponent<photonNetworkManager> ().changeTurnOnFly ();
+		GameObject.Find ("NetworkManager").GetComponent<PhotonView> ().RPC ("changeTurnOnFly",PhotonTargets.All);
+		boolLock = false;
+		CurrentPlayerNumber = GameObject.Find ("NetworkManager").GetComponent<photonNetworkManager> ().currentTurnOwner;
+		//GameObject.Find ("NetworkManager").GetComponent<photonNetworkManager> ()
+        //Units.FindAll(u => u.PlayerNumber.Equals(CurrentPlayerNumber)).ForEach(u => { u.OnTurnStart(); });
+        //Players.Find(p => p.PlayerNumber.Equals(CurrentPlayerNumber)).Play(this);     
     }
+
+	public void StartTurn(){
+		CurrentPlayerNumber = GameObject.Find ("NetworkManager").GetComponent<photonNetworkManager> ().currentTurnOwner;
+		if (Units.Select(u => u.PlayerNumber).Distinct().Count() == 1){
+			return;
+		}
+		if (!boolLock) {
+			CellGridState = new CellGridStateTurnChanging (this);
+			//Units.FindAll(u => u.PlayerNumber.Equals(CurrentPlayerNumber)).ForEach(u => { u.OnTurnEnd(); });
+			Units.FindAll (u => u.PlayerNumber.Equals (PhotonNetwork.player.ID)).ForEach (u => {
+				u.OnTurnStart ();
+			});
+			Players.Find(p => p.PlayerNumber.Equals(CurrentPlayerNumber)).Play(this); 
+			boolLock = true;
+		}
+		}
 
 }
