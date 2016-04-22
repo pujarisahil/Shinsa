@@ -217,6 +217,7 @@ public abstract class Unit : UnityEngine.MonoBehaviour
 	[PunRPC]
 	public virtual void OccupyEnemyCell(String destinationCell){
 		Debug.LogWarning ("Occupy that enemy cell");
+
 		GameObject.Find ("CellGrid").GetComponent<CellGrid> ().Units.Find (c => c.Cell.gameObject.name == destinationCell).OnDestroyed ();
 
 	}

@@ -76,7 +76,7 @@ public class shinsaUnit : Unit
 
     public override void MarkAsReachableEnemy()
     {
-        GetComponent<SpriteRenderer>().color = LeadingColor + Color.red;
+        GetComponent<SpriteRenderer>().color = LeadingColor/* + Color.red*/;
     }
 
     public override void MarkAsSelected()

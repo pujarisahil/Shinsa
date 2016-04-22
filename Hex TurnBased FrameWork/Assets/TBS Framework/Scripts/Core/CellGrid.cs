@@ -119,7 +119,16 @@ public class CellGrid : MonoBehaviour
                 GameEnded.Invoke(this, new EventArgs());
         }
     }
-    
+	private void OnUnitRemoveFromList(object sender, EventArgs e){
+		if ((sender as shinsaUnit).UnitName == "Archflamen") {
+			//end game and trigger UI
+
+
+		} else {
+			Units.Remove (sender as Unit);
+		}
+	}
+
     /// <summary>
     /// Method is called once, at the beggining of the game.
     /// </summary>
@@ -162,6 +171,9 @@ public class CellGrid : MonoBehaviour
 		CurrentPlayerNumber = GameObject.Find ("NetworkManager").GetComponent<photonNetworkManager> ().currentTurnOwner;   
     }
 
+	/// <summary>
+	/// Starts the turn.
+	/// </summary>
 	public void StartTurn(){
 		CurrentPlayerNumber = GameObject.Find ("NetworkManager").GetComponent<photonNetworkManager> ().currentTurnOwner;
 		if (Units.Select(u => u.PlayerNumber).Distinct().Count() == 1){

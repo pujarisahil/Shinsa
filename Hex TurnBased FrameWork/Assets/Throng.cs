@@ -7,7 +7,6 @@ public class Throng : shinsaUnit {
 
     public override List<Cell> GetAvailableDestinations(List<Cell> cells)
     {
-		//Debug.Log ("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         var ret = new List<Cell>();
 
         ret = Cell.GetComponent<Hexagon>().Get3LineNeighbours(cells);
@@ -17,7 +16,6 @@ public class Throng : shinsaUnit {
 
 		Debug.Log ("It has " + ret.Count);
 
-        //return cellsInMovementRange;
 		return ret;
     }
 }

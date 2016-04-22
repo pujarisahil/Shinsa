@@ -82,6 +82,9 @@ public abstract class Hexagon : Cell
 	public static readonly Vector3[] _directions6 = { 
 		new Vector3(+2, -1, -1), new Vector3(+1,+1,-2), new Vector3(-2, +1, +1), new Vector3(-1, -1, +2)
 	};
+	public static readonly Vector3[] _directions7 = {
+		new Vector3 (+2, -1, -1), new Vector3 (+1, +1, -2), new Vector3 (-2, +1, +1), new Vector3 (-1, -1, +2), new Vector3 (+1, -2, +1), new Vector3 (-1, +2, -1)
+	};
 	//1, -0.5, -0.5
 	//0.5, 0.5,-1
 	//-1,0.5,,0.5
@@ -114,7 +117,7 @@ public abstract class Hexagon : Cell
         foreach (var direction in _directions)
         {
             int i = 1;
-            while (i < 11)
+            while (i < 13)
             {
                 var neighbour = cells.Find(c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction *i));
 				if (neighbour == null)
@@ -138,7 +141,7 @@ public abstract class Hexagon : Cell
         foreach (var direction in _directions2)
         {
             int i = 1;
-            while (i < 11)
+            while (i < 13)
             {
                 var neighbour = cells.Find(c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction * i));
 				if (neighbour == null)
@@ -162,7 +165,7 @@ public abstract class Hexagon : Cell
         foreach (var direction in _directions3)
         {
             int i = 1;
-            while (i < 11)
+            while (i < 13)
             {
                 var neighbour = cells.Find(c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction * i));
                 if (neighbour == null) break;
@@ -192,12 +195,29 @@ public abstract class Hexagon : Cell
         return ret;
     }
 
+
+	public List<Cell> GetMinoriteCells(List<Cell> cells){
+		List<Cell> ret = new List<Cell> ();
+		foreach (var direction in _directions7) {
+			var neighbour = cells.Find (c => c.OffsetCoord == CubeToOffsetCoords (CubeCoord + direction));
+			if (neighbour == null)
+				continue;
+			else if (neighbour.IsTaken && neighbour.playerIndex != playerIndex) {
+				ret.Add (neighbour);
+				continue;
+			} else if (neighbour.IsTaken)
+				continue;
+			ret.Add (neighbour);
+		}
+		return ret;
+	}
+
 	public List<Cell> GetPerceptorCells(List<Cell> cells){
 		List<Cell> ret = new List<Cell>();
 		foreach (var direction in _directions6)
 		{
 			int i = 1;
-			while (i < 11)
+			while (i < 13)
 			{
 				var neighbour = cells.Find(c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction *i));
 				if (neighbour == null)

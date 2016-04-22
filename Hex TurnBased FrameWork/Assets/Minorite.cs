@@ -7,6 +7,7 @@ public class Minorite : shinsaUnit {
 
     public override List<Cell> GetAvailableDestinations(List<Cell> cells)
     {
+		/*
         var ret = new List<Cell>();
         var cellsInMovementRange = cells.FindAll(c => IsCellMovableTo(c) && c.GetDistance(Cell) <= 2);
 
@@ -19,6 +20,8 @@ public class Minorite : shinsaUnit {
 
         }
         return ret;
-    }
+*/
+		return Cell.GetComponent<Hexagon> ().GetMinoriteCells (cells);
+}
 
 }
