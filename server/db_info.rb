@@ -34,3 +34,8 @@ DB_DATABASE = 'shinsa'
 	username VARCHAR(20),
 	cookie VARCHAR(200)
 )"
+
+@logs_schema = "logs (
+	player1 INT,
+	player2 INT,
+)"
