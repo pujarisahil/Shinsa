@@ -20,7 +20,7 @@ DB_DATABASE = 'shinsa'
 	lastname VARCHAR(30),
 	score INTEGER,
 	games_played INTEGER,
-	games_won INTEGER,
+	games_won INTEGER
 )"
 
 @friends_schema = "friends (
