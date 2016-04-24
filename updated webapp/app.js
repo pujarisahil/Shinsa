@@ -7,19 +7,20 @@ var express               =   require("express"),
 
 mongoose.connect("mongodb://localhost/users");
 
-
+app.use(express.static(__dirname + '/views'));
 //Allows the use of bodyParser
 app.use(bodyParser.urlencoded({extended : true}));
+
 
 //Schema of a User
 var userSchema = new mongoose.Schema({
   firstName: String,
   lastName: String,
   password: String,
-  birthDate: String,
+  //birthDate: String,
   fbID: String,
   generalID: String,
-  gender: String,
+  //gender: String,
   email: String,
   rating: Number
 });
@@ -61,7 +62,7 @@ app.get("/", function(req, res) {
 * Routes to the register page which is the account creation page
 */
 app.get("/register", function(req, res) {
-  res.render("register");
+  res.render("login");
 });
 
 /*
@@ -70,15 +71,16 @@ app.get("/register", function(req, res) {
 app.post("/register", function(req, res) {
   var firstName = req.body.firstname;
   var lastName = req.body.lastname;
-  var email = req.body.email;
-  var month = req.body.month;
-  var day = req.body.day;
-  var year = req.body.year;
-  var gender = req.body.gender;
-  var pass1 = req.body.password;
-  var pass2 = req.body.confirm_password;
+  var email = req.body.email2;
+  // var month = req.body.month;
+  // var day = req.body.day;
+  // var year = req.body.year;
+  // var gender = req.body.gender;
+  var pass1 = req.body.password2;
+  var pass2 = req.body.confirm_password2;
   
-  if(firstName && lastName && email && month && day && year && gender && pass1 === pass2) {
+  
+  if(firstName && lastName && email && pass1 === pass2) {
     var resultArray;
     User.find({email : email}, function (err, docs) {
         if(err) {
@@ -88,14 +90,12 @@ app.post("/register", function(req, res) {
             res.send("An account already exists with this email ID");
             check = true;
         } else {
-          resultArray = [firstName, lastName, day, gender, email, 0, month, year, gender, email];
+          resultArray = [firstName, lastName,  email, 0,  email];
           User.create(
           {
             firstName: firstName,
             lastName: lastName,
-            gender : gender,
             email : email,
-            birthDate : month + "/" + day + "/" + year,
             password : pass1,
             rating : 0
           }, function(err, user) {

@@ -33,12 +33,15 @@ public class photonNetworkManager : Photon.PunBehaviour {
 	void OnJoinedRoom(){
 		GameObject player = PhotonNetwork.Instantiate ("HumanPlayer", Vector3.zero, Quaternion.identity, 0);
 		thisPlayerNumber = PhotonNetwork.player.ID;
-		Debug.Log ("this player unit tag is "+ player.GetComponent<Player>().unitSetName);
-		GetComponent<PhotonView>().RPC ("setUnitPlayerNum", PhotonTargets.AllBuffered, player.GetComponent<Player>().unitSetName, PhotonNetwork.player.ID);
+		Debug.Log ("this player unit tag is " + player.GetComponent<Player> ().unitSetName);
+		GetComponent<PhotonView> ().RPC ("setUnitPlayerNum", PhotonTargets.AllBuffered, player.GetComponent<Player> ().unitSetName, PhotonNetwork.player.ID);
 		StartCoroutine (Joined ());
 
-		//Application.ExternalEval ("GetUsername");
+		Application.ExternalEval ("GetUsername");
 	}
+
+
+
 
 	[PunRPC]
 	public void changeTurnOnFly(){
