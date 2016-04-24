@@ -20,7 +20,6 @@ def getAccount(_username)
 			FROM accounts \
 			WHERE username='#{_username}';")
 		row = rs.fetch_row
-		# Base 10 id
 		id = row[0]
 		firstname = row[2] 
 		lastname = row[3]
@@ -102,31 +101,6 @@ def updateAccount(_account)
 		score = _account.getScore()
 		games_played = _account.getGamesPlayed()
 		games_won = _account.getGamesWon()
-		if _account.getFriendsListId() != nil then
-			friends_list = _account.getFriendsListId().join(',')
-		else
-			friends_list = ""
-		end
-		if _account.getFriendReqMade() != nil then
-			friend_req_made = _account.getFriendReqMade().join(',')
-		else
-			friend_req_made = ""
-		end
-		if _account.getFriendReqRec() != nil then
-			friend_req_rec = _account.getFriendReqRec().join(',')
-		else
-			friend_req_rec = ""
-		end
-		if _account.getFriendReqAcc() != nil then
-			friend_req_acc = _account.getFriendReqAcc().join(',')
-		else
-			friend_req_acc = ""
-		end
-		if _account.getFriendReqDen() != nil then
-			friend_req_den = _account.getFriendReqDen().join(',')
-		else
-			friend_req_den = ""
-		end
 
 		# Make database query with updated data
 		dbc.query("UPDATE accounts SET \
@@ -154,11 +128,13 @@ def findId(_username)
 	begin
 		# Establish connection with database
 		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE)_
-		rs = dbc.query("SELECT id FROM accounts WHERE \
-			username='#{_username}';")
+		rs = dbc.query("SELECT id \
+			FROM accounts \
+			WHERE username='#{_username}';")
 		row = rs.fetch_row
 		id = row[0]
 		return Integer(id)
+
 	rescue Mysql::Error => e
 		puts "ERROR"
 		puts "Error Code: #{e.errno}"
@@ -184,8 +160,10 @@ def getFriend(_id)
 		# Establish connection with database
 		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE)
 		rs = dbc.query("SELECT username, firstname, lastname, score \
-			FROM accounts WHERE id='#{_id}';")
+			FROM accounts \
+			WHERE id='#{_id}';")
 		return rs.fetch_row
+
 	rescue Mysql::Error => e
 		puts "ERROR"
 		puts "Error Code: #{e.errno}"
@@ -199,27 +177,28 @@ end
 # Public: Adds a requesting player's base 62 id to a receiving player's 
 # 'friend_req_rec' value
 #
-# _player - Username of player who is receiving the friend request
-# _myid - Base 10 id of player who sent the friend request
+# _playerid - Id of player receiving the friend request
+# _myid - Id of player who sent the friend request
 #
 # Returns nothing
 #
-def makeFriendRequest(_player, _myid)
+def makeFriendRequest(_playerid, _myid)
 	begin
 		# Establish connection with database
 		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE)
-		#rs = dbc.query("
-		#rs = dbc.query("SELECT friend_req_rec FROM accounts WHERE \
-		#	username='#{_player}';")
-		#row = rs.fetch_row
-		#old_queue = row[0]
-		#if old_queue != nil && old_queue.length != 0 then
-            	#puts "old queue: >#{old_queue}<"
-		#	old_queue = "#{old_queue},"
-		#end
-		#rs = dbc.query("UPDATE accounts SET friend_req_rec=\
-		#	'#{old_queue}#{con10to62(_myid)}' WHERE username=\
-		#	'#{_player}';")
+		rs = dbc.query("SELECT status \
+			FROM friends \
+			WHERE (requester=#{_playerid} \
+			AND receiver=#{_myid}) \
+			OR (requester=#{_myid} \
+			AND receiver=#{_playerid});")
+		if rs.num_rows > 0 then
+			return
+		end
+
+		rs = dbc.query("INSERT INTO friends \
+			VALUES (#{_myid}, #{_playerid}, 1);")
+
 	rescue Mysql::Error => e
 		puts "ERROR"
 		puts "Error Code: #{e.errno}"
@@ -232,61 +211,30 @@ end
 
 # Public: Adjusts Database values when a friend request is accepted
 #
-# _player - Username of player who sent friend request
+# _playerid - Id of player who sent the friend request
 # _myid	- Id of player who accepted the friend request
 #
 # Returns nothing
 #
-def acceptFriendRequest(_player, _myid)
+def acceptFriendRequest(_playerid, _myid)
 	begin
 		# Establish connection with database
 		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE)
 
-		# Convert the base 10 id to base 62 for database storage
-		id62 = con10to62(_myid)
+		rs = dbc.query("SELECT status |
+			FROM friends \
+			WHERE requester=#{_playerid} \
+			AND receiver=#{_myid};")
 
-		# Adds accepting player's base 62 id to original player's
-		# 'friend_req_acc' value in the database
-		rs = dbc.query("SELECT friend_req_acc FROM accounts WHERE \
-			username='#{_player}';")
-		row = rs.fetch_row
-		old_req_acc = row[0]
-		if old_req_acc != nil && old_req_acc.length != 0 then
-			old_req_acc = "#{old_req_acc},"
+		if rs.num_rows < 1 then
+			return
 		end
-		dbc.query("UPDATE accounts SET friend_req_acc=\
-			'#{old_req_acc}#{id62}' WHERE username=\
-			'#{_player}';")
-		
-		# Removes accepting player's base 62 id from original player's
-		# 'friend_req_made' value in the database
-		rs = dbc.query("SELECT friend_req_made FROM accounts WHERE \
-			username='#{_player}';")
-		row = rs.fetch_row
-		old_req_made = row[0].split(',')
-		temp_array = Array.new(old_req_made.size - 1)
-		j = 0
-		for i in 0..(old_req_made.size - 1)
-			if con62to10(old_req_made[i]) != _myid then
-				temp_array[j] = old_req_made[i]
-				j += 1
-			end
-		end
-		new_req_made = temp_array.join(',')
-		dbc.query("UPDATE accounts set friend_req_made='#{new_req_made}'\
-			WHERE username='#{_player}';")
 
-		# Adds accepting player's base 62 id to original player's
-		# 'friends_list' value in the database
-		rs = dbc.query("SELECT friends_list FROM accounts WHERE \
-			username='#{_player}';")
-		row = rs.fetch_row
-		old_list = row[0]
-		if old_list != nil && old_list.length != 0 then
-			old_list = "#{old_list},"
-		end
-		dbc.query("UPDATE accounts SET friends_list='#{old_list}#{id62}' \
-			WHERE username='#{_player}';")
+		rs = dbc.query("UPDATE friends \
+			SET status=0 \
+			WHERE requester=#{_playerid} \
+			AND receiver=#{_myid};")
+
 	rescue Mysql::Error => e
 		puts "ERROR"
 		puts "Error Code: #{e.errno}"
@@ -309,39 +257,20 @@ def denyFriendRequest(_player, _myid)
 		# Establish connection with database
 		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE)
 		
-		# Convert the base 10 id to base 62 for database storage
-		id62 = con10to62(_myid)
+		rs = dbc.query("SELECT status |
+			FROM friends \
+			WHERE requester=#{_playerid} \
+			AND receiver=#{_myid};")
 
-		# Adds accepting player's base 62 id to original player's
-		# 'friend_req_den' value in the database
-		rs = dbc.query("SELECT friend_req_den FROM accounts WHERE \
-			username='#{_player}';")
-		row = rs.fetch_row
-		old_req_acc = row[0]
-		if old_req_acc != nil && old_req_acc.length != 0 then
-			old_req_acc = "#{old_req_acc},"
+		if rs.num_rows < 1 then
+			return
 		end
-		dbc.query("UPDATE accounts SET friend_req_den=\
-			'#{old_req_acc}#{id62}' WHERE username=\
-			'#{_player}';")
 
-		# Removes accepting player's base 62 id from original player's
-		# 'friend_req_made' value in the database
-		rs = dbc.query("SELECT friend_req_made FROM accounts WHERE \
-			username='#{_player}';")
-		row = rs.fetch_row
-		old_req_made = row[0].split(',')
-		temp_array = Array.new(old_req_made.size - 1)
-		j = 0
-		for i in 0..(old_req_made.size - 1)
-			if con62to10(old_req_made[i]) != _myid then
-				temp_array[j] = old_req_made[i]
-				j += 1
-			end
-		end
-		new_req_made = temp_array.join(',')
-		dbc.query("UPDATE accounts set friend_req_made='#{new_req_made}'\
-			WHERE username='#{_player}';")
+		rs = dbc.query("UPDATE friends \
+			SET status=2 \
+			WHERE requester=#{_playerid} \
+			AND receiver=#{_myid};")
+		
 	rescue Mysql::Error => e
 		puts "ERROR"
 		puts "Error Code: #{e.errno}"
@@ -359,24 +288,25 @@ end
 #
 # Returns nothing
 #
-def destroyFriendship(_player, _myid)
+def destroyFriendship(_playerid, _myid)
 	begin
 		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE)
-		rs = dbc.query("SELECT friends_list FROM accounts WHERE \
-			username='#{_player}';")
-		row = rs.fetch_row
-		old_req_made = row[0].split(',')
-		temp_array = Array.new(old_req_made.size - 1)
-		j = 0
-		for i in 0..(old_req_made.size - 1)
-			if con62to10(old_req_made[i]) != _myid then
-				temp_array[j] = old_req_made[i]
-				j += 1
-			end
+
+		rs = dbc.query("SELECT status |
+			FROM friends \
+			WHERE requester=#{_playerid} \
+			AND receiver=#{_myid};")
+
+		if rs.num_rows < 1 then
+			return
 		end
-		new_req_made = temp_array.join(',')
-		dbc.query("UPDATE accounts set friends_list='#{new_req_made}'\
-			WHERE username='#{_player}';")
+
+		rs = dbc.query("DELETE FROM friends \
+			WHERE (requester=#{_playerid} \
+			AND receiver=#{_myid}) \
+			OR (requester=#{_myid} \
+			AND receiver=#{_playerid};")
+
 	rescue Mysql::Error => e
 		puts "ERROR"
 		puts "Error Code: #{e.errno}"
