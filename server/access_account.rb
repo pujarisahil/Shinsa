@@ -56,25 +56,32 @@ def getAccount(_username)
 			friend_req_rec.push(row[0])
 		end
 
-		rs = dbc.query("SELECT receiver \
-			FROM friends \
-			WHERE requester=#{id} AND status=2;")
-		friend_req_acc = Array.new
-		while row = rs.fetch_row do
-			friend_req_acc.push(row[0])
-		end
+		#rs = dbc.query("SELECT receiver \
+		#	FROM friends \
+		#	WHERE requester=#{id} AND status=2;")
+		#friend_req_acc = Array.new
+		#while row = rs.fetch_row do
+		#	friend_req_acc.push(row[0])
+		#end
 
-		rs = dbc.query("SELECT receiver \
-			FROM friends \
-			WHERE requester=#{id} AND status=3;")
-		friend_req_den = Array.new
-		while row = rs.fetch_row do
-			friend_req_den.push(row[0])
-		end
+		#rs = dbc.query("SELECT receiver \
+		#	FROM friends \
+		#	WHERE requester=#{id} AND status=3;")
+		#friend_req_den = Array.new
+		#while row = rs.fetch_row do
+		#	friend_req_den.push(row[0])
+		#end
 
-		return Account.new(id, _username, firstname, lastname, score, \
-			games_played, games_won, friends_list, friend_req_made,\
-			friend_req_rec, friend_req_acc, friend_req_den)
+		return Account.new(id, \
+			_username, \
+			firstname, \
+			lastname, \
+			score, \
+			games_played, \
+			games_won, \
+			friends_list, \
+			friend_req_made,\
+			friend_req_rec)
 	rescue Mysql::Error => e
 		puts "ERROR"
 		puts "Error Code: #{e.errno}"
@@ -266,11 +273,9 @@ def denyFriendRequest(_player, _myid)
 			return
 		end
 
-		rs = dbc.query("UPDATE friends \
-			SET status=2 \
+		rs = dbc.query("DELETE FROM friends \
 			WHERE requester=#{_playerid} \
-			AND receiver=#{_myid};")
-		
+			AND receiver=#{_myid};") \
 	rescue Mysql::Error => e
 		puts "ERROR"
 		puts "Error Code: #{e.errno}"
