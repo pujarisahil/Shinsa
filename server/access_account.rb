@@ -1,6 +1,7 @@
 #!/usr/bin/ruby -w
 
 require "mysql"
+require "json"
 require_relative "db_info"
 require_relative "id_convert"
 
@@ -118,7 +119,7 @@ end
 def findId(_username)
 	begin
 		# Establish connection with database
-		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE)_
+		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE)
 		rs = dbc.query("SELECT id \
 			FROM accounts \
 			WHERE username='#{_username}';")
@@ -258,7 +259,7 @@ def denyFriendRequest(_playerid, _myid)
 
 		rs = dbc.query("DELETE FROM friends \
 			WHERE requester=#{_playerid} \
-			AND receiver=#{_myid};") \
+			AND receiver=#{_myid};")
 	rescue Mysql::Error => e
 		puts "ERROR"
 		puts "Error Code: #{e.errno}"
@@ -320,7 +321,7 @@ def logGame(_winnerid, _loserid)
 		rs = dbc.query("INSERT INTO logs \
 			VALUES (NOW(), #{_winnerid}, #{_loserid});")
 
-	rescue Mysql:Error => e
+	rescue Mysql::Error => e
 		puts "ERROR"
 		puts "Error Code: #{e.errno}"
 		puts "Error Message: #{e.error}"
@@ -341,7 +342,7 @@ def getLogs()
 		rs = dbc.query("SELECT * \
 			FROM logs;")
 		data = "{\"logs\":["
-		for i in 0..(rs.num_row - 1)
+		for i in 0..(rs.num_rows - 1)
 			if (i > 0) then
 				data += ","
 			end
@@ -350,7 +351,7 @@ def getLogs()
 		end
 		data += "]}"
 		return data
-	rescue Mysql:Error => e
+	rescue Mysql::Error => e
 		puts "ERROR"
 		puts "Error Code: #{e.errno}"
 		puts "Error Message: #{e.error}"
