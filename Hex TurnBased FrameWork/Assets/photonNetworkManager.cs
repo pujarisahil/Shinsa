@@ -36,6 +36,8 @@ public class photonNetworkManager : Photon.PunBehaviour {
 		Debug.Log ("this player unit tag is "+ player.GetComponent<Player>().unitSetName);
 		GetComponent<PhotonView>().RPC ("setUnitPlayerNum", PhotonTargets.AllBuffered, player.GetComponent<Player>().unitSetName, PhotonNetwork.player.ID);
 		StartCoroutine (Joined ());
+
+		//Application.ExternalEval ("GetUsername");
 	}
 
 	[PunRPC]
