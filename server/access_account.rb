@@ -328,3 +328,33 @@ def logGame(_winnerid, _loserid)
 		dbc.close if dbc
 	end
 end
+
+
+# Public: Returns game logs
+#
+# Returns JSON data of game logs
+#
+def getLogs()
+	begin
+		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE)
+
+		rs = dbc.query("SELECT * \
+			FROM logs;")
+		data = "{\"logs\":["
+		for i in 0..(rs.num_row - 1)
+			if (i > 0) then
+				data += ","
+			end
+			row = rs.fetch_row
+			data += row.to_json
+		end
+		data += "]}"
+		return data
+	rescue Mysql:Error => e
+		puts "ERROR"
+		puts "Error Code: #{e.errno}"
+		puts "Error Message: #{e.error}"
+	ensure
+		dbc.close if dbc
+	end
+end
