@@ -7,11 +7,9 @@ require_relative "db_info"
 def saveLog(log)
 	begin
 		dbc = Mysql.new(@DB_SERVER, @DB_USER, @DB_PASSWORD, 'logs')
-		#puts 'Database Connected'
 		result = dbc.query("SELECT * FROM log_schema;")
 		row = result.fetch_row
 		next_log = row[0]
-		#max_logs = row[1]
 		dbc.query("CREATE TABLE log#{next_log} (player VARCHAR(20), pieceid INTEGER, startpos INTEGER, endpos INTEGER)")
 		dbc.query("INSERT INTO log#{next_log} VALUES ('#{log.getWinner()}', NULL, NULL, NULL);")
 		dbc.query("INSERT INTO log#{next_log} VALUES ('#{log.getLoser()}', NULL, NULL, NULL);")
@@ -33,7 +31,6 @@ end
 def getLog(num)
 	begin
 		dbc = Mysql.new(@DB_SERVER, @DB_USER, @DB_PASSWORD, 'logs')
-		#puts 'Database Connected'
 		result = dbc.query("SELECT * FROM log#{num}")
 		row = result.fetch_row
 		winner = row[0]
@@ -47,7 +44,6 @@ def getLog(num)
 			row = result.fetch_row
 			log.addToLog(row[0], row[1], row[2], row[3])
 		end
-		#log.printLog()
 		return log
 	rescue Mysql::Error => e
 		puts "ERROR"
