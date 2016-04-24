@@ -109,25 +109,16 @@ public class CellGrid : MonoBehaviour
     {
         CellGridState.OnUnitClicked(sender as Unit);
     }
+
     private void OnUnitDestroyed(object sender, AttackEventArgs e)
     {
-        Units.Remove(sender as Unit);
-        var totalPlayersAlive = Units.Select(u => u.PlayerNumber).Distinct().ToList(); //Checking if the game is over
-        if (totalPlayersAlive.Count == 1)
-        {
-            if(GameEnded != null)
-                GameEnded.Invoke(this, new EventArgs());
-        }
-    }
-	private void OnUnitRemoveFromList(object sender, EventArgs e){
 		if ((sender as shinsaUnit).UnitName == "Archflamen") {
-			//end game and trigger UI
-
-
-		} else {
-			Units.Remove (sender as Unit);
+			if(GameEnded != null)
+				GameEnded.Invoke(sender, new EventArgs());
 		}
-	}
+        //Units.Remove(sender as Unit);
+    }
+
 
     /// <summary>
     /// Method is called once, at the beggining of the game.

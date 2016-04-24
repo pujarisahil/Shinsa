@@ -6,8 +6,6 @@ using System;
 public class ShinsaGuiController : MonoBehaviour {
 	public CellGrid CellGrid;
 	public GameObject UnitsParent;
-	public GameObject winPanel;
-	public GameObject lossPanel;
 	public photonNetworkManager networkManager;
 
 	public Image UnitImage;
@@ -48,7 +46,7 @@ public class ShinsaGuiController : MonoBehaviour {
 		
 
 	private void OnGameEnded(object sender, EventArgs e){
-
+		networkManager.gameObject.GetComponent<PhotonView> ().RPC ("WinAndLoss", PhotonTargets.All, (sender as shinsaUnit).PlayerNumber);
 	}
 	private void OnTurnEnded(object sender, EventArgs e){
 

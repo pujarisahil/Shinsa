@@ -139,8 +139,8 @@ public abstract class Unit : UnityEngine.MonoBehaviour
     {
         Cell.IsTaken = false;
         MarkAsDestroyed();
+		GameObject.Find ("CellGrid").GetComponent<CellGrid> ().Units.Remove (this);
 		gameObject.SetActive (false);
-		//Destroy(gameObject);
     }
 
     /// <summary>
@@ -217,9 +217,10 @@ public abstract class Unit : UnityEngine.MonoBehaviour
 	[PunRPC]
 	public virtual void OccupyEnemyCell(String destinationCell){
 		Debug.LogWarning ("Occupy that enemy cell");
+		if (UnitDestroyed != null)
+			UnitDestroyed.Invoke(GameObject.Find ("CellGrid").GetComponent<CellGrid> ().Units.Find (c => c.Cell.gameObject.name == destinationCell), new AttackEventArgs(this, GameObject.Find ("CellGrid").GetComponent<CellGrid> ().Units.Find (c => c.Cell.gameObject.name == destinationCell), 0));
 
 		GameObject.Find ("CellGrid").GetComponent<CellGrid> ().Units.Find (c => c.Cell.gameObject.name == destinationCell).OnDestroyed ();
-
 	}
 
     public virtual void Move(Cell destinationCell, List<Cell> path)

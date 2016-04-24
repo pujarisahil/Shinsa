@@ -19,6 +19,9 @@ public class photonNetworkManager : Photon.PunBehaviour {
 	public Text enemyTurnText;
 	public Image indicationLight;
 
+	public GameObject winPanel;
+	public GameObject lossPanel;
+
 	void Start () {
 		PhotonNetwork.ConnectUsingSettings ("0.1");
 	}
@@ -37,10 +40,21 @@ public class photonNetworkManager : Photon.PunBehaviour {
 		GetComponent<PhotonView> ().RPC ("setUnitPlayerNum", PhotonTargets.AllBuffered, player.GetComponent<Player> ().unitSetName, PhotonNetwork.player.ID);
 		StartCoroutine (Joined ());
 
-		Application.ExternalEval ("GetUsername");
+
+		//Application.ExternalEval ("GetUsername");
 	}
 
+	[PunRPC]
+	public void WinAndLoss(int loserIndex){
+		Time.timeScale = 0f;
+		if (loserIndex == thisPlayerNumber) {
+			lossPanel.SetActive (true);
+		} else {
+			winPanel.SetActive (true);
+		}
 
+		PhotonNetwork.Disconnect ();
+	}
 
 
 	[PunRPC]
