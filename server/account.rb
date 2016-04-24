@@ -11,8 +11,8 @@ require_relative 'score'
 #
 # Returns Account object of player
 #
-def login(_email)
-	account = getAccount(_email)
+def login(_username)
+	account = getAccount(_username)
 	account.docAccount(account)
 	return account
 end
@@ -72,6 +72,7 @@ class Account
 	# Public: Initializes Account Object
 	#
 	# _id - Player's unique id in base 10
+	# _username - Player's username
 	# _email - Player's email
 	# _firstname - Player's firstname
 	# _lastname - Player's lastname
@@ -84,6 +85,7 @@ class Account
 	# Returns nothing
 	#
 	def initialize(_id, \
+			_username, \
 			_email, \
 			_firstname, \
 			_lastname, \
@@ -93,6 +95,7 @@ class Account
 			_friends_list, \
 			_friend_req_rec)
 		@id = Integer(_id)
+		@username = _username
 		@email = _email
 		@realname = "#{_firstname} #{_lastname}"
 		@score = Integer(_score)
