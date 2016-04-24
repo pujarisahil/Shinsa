@@ -83,7 +83,7 @@ public abstract class Cell : MonoBehaviour, IGraphNode
 
     public abstract List<Cell> Get6LineNeighbours(List<Cell> cells);
     public abstract List<Cell> Get1LineNeighbours(List<Cell> cells);
-    public abstract List<Cell> Get3LineNeighbours(List<Cell> cells);
+    public abstract List<Cell> GetFrontNeighbour(List<Cell> cells);
     public abstract List<Cell> GetSameColorCrossNeighbours(List<Cell> cells);
 
     public int GetDistance(IGraphNode other)

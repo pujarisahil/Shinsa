@@ -53,7 +53,7 @@ public class MySquare : Square
     {
         throw new NotImplementedException();
     }
-    public override List<Cell> Get3LineNeighbours(List<Cell> cells)
+    public override List<Cell> GetFrontNeighbour(List<Cell> cells)
     {
         throw new NotImplementedException();
     }

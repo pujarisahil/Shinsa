@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using Photon;
+using UnityEngine.UI;
 
 public class photonNetworkManager : Photon.PunBehaviour {
 
@@ -11,19 +12,30 @@ public class photonNetworkManager : Photon.PunBehaviour {
 	public int currentTurnOwner = 1;
 	public static int thisPlayerNumber = 1000;
 
+	public Text connectionStatusText;
+
+	public GameObject TurnStatus;
+	public Text yourTurnText;
+	public Text enemyTurnText;
+	public Image indicationLight;
+
 	void Start () {
 		PhotonNetwork.ConnectUsingSettings ("0.1");
 	}
 
-	void OnGUI(){
-		GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
+	IEnumerator Joined(){
+		yield return new WaitForSeconds (1.5f);
+		connectionStatusText.enabled = false;
+		TurnStatus.SetActive (true);
 	}
-		
+
+
 	void OnJoinedRoom(){
 		GameObject player = PhotonNetwork.Instantiate ("HumanPlayer", Vector3.zero, Quaternion.identity, 0);
 		thisPlayerNumber = PhotonNetwork.player.ID;
 		Debug.Log ("this player unit tag is "+ player.GetComponent<Player>().unitSetName);
 		GetComponent<PhotonView>().RPC ("setUnitPlayerNum", PhotonTargets.AllBuffered, player.GetComponent<Player>().unitSetName, PhotonNetwork.player.ID);
+		StartCoroutine (Joined ());
 	}
 
 	[PunRPC]
@@ -48,7 +60,6 @@ public class photonNetworkManager : Photon.PunBehaviour {
 		Debug.Log ("Tag is" + index);
 
 		foreach (GameObject a in GameObject.FindGameObjectsWithTag(index)) {
-			//a.GetComponent<PhotonView>().RPC("setNumber", PhotonTargets.All, id);
 			Debug.Log("runing it");
 			a.GetComponent<shinsaUnit>().setNumber(id);
 		}
@@ -66,6 +77,8 @@ public class photonNetworkManager : Photon.PunBehaviour {
 	}
 
 	void Update(){
+
+		connectionStatusText.text = PhotonNetwork.connectionStateDetailed.ToString ();
 		Debug.LogWarning ("Local ownership is " + PhotonNetwork.player.ID);
 		Debug.LogWarning ("That remote ownership is" + PhotonNetwork.otherPlayers[0].ID);
 		Debug.LogWarning ("playernumber is " + PhotonNetwork.playerList.Length);
@@ -73,6 +86,17 @@ public class photonNetworkManager : Photon.PunBehaviour {
 
 		if (currentTurnOwner == thisPlayerNumber) {
 			cellgrid.StartTurn ();
+			enemyTurnText.enabled = false;
+			yourTurnText.enabled = true;
+			if (indicationLight.color.a <= 0.5f) {
+				indicationLight.color = Color.Lerp (indicationLight.color,new Color(indicationLight.color.a,indicationLight.color.b,indicationLight.color.g,0.5f),2.5f*Time.deltaTime);
+			}
+		} else if(thisPlayerNumber != 1000){
+			enemyTurnText.enabled = true;
+			yourTurnText.enabled = false;
+			if (indicationLight.color.a > 0f) {
+				indicationLight.color = Color.Lerp (indicationLight.color,new Color(indicationLight.color.a,indicationLight.color.b,indicationLight.color.g,0f),2.5f*Time.deltaTime);
+			}
 		}
 	}
 }

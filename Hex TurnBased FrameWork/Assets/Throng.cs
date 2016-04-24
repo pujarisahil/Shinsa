@@ -9,13 +9,9 @@ public class Throng : shinsaUnit {
     {
         var ret = new List<Cell>();
 
-        ret = Cell.GetComponent<Hexagon>().Get3LineNeighbours(cells);
+        ret = Cell.GetComponent<Hexagon>().GetFrontNeighbour(cells);
 
-		Debug.Log ("occ neighb"+ Cell.GetComponent<Hexagon> ().GetEnemyOccupiedNeighbours (cells).Count);
 		ret.AddRange (Cell.GetComponent<Hexagon> ().GetEnemyOccupiedNeighbours (cells));
-
-		Debug.Log ("It has " + ret.Count);
-
 		return ret;
     }
 }

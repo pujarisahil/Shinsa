@@ -74,6 +74,7 @@ public abstract class Hexagon : Cell
         new Vector3(+1, 0, -1), new Vector3(-1, 0, +1)};
     public static readonly Vector3[] _directions3 =  {
         new Vector3(1, 1, 1), new Vector3(-1, 1, -1) };
+	
     public static readonly Vector3[] _directions4 =  {
         new Vector3(+1, 0, -1)};
 	public static readonly Vector3[] _directions5 = { 
@@ -85,6 +86,11 @@ public abstract class Hexagon : Cell
 	public static readonly Vector3[] _directions7 = {
 		new Vector3 (+2, -1, -1), new Vector3 (+1, +1, -2), new Vector3 (-2, +1, +1), new Vector3 (-1, -1, +2), new Vector3 (+1, -2, +1), new Vector3 (-1, +2, -1)
 	};
+
+	public static readonly Vector3[] _directions8 = { 
+		new Vector3(-1, +1, 0), new Vector3(0, -1, +1)
+	};
+
 	//1, -0.5, -0.5
 	//0.5, 0.5,-1
 	//-1,0.5,,0.5
@@ -176,7 +182,14 @@ public abstract class Hexagon : Cell
         }
         return ret;
     }
-    public override List<Cell> Get3LineNeighbours(List<Cell> cells)
+
+
+	/// <summary>
+	/// For black Throng
+	/// </summary>
+	/// <returns>The front neighbours.</returns>
+	/// <param name="cells">Cells.</param>
+    public override List<Cell> GetFrontNeighbour(List<Cell> cells)
     {
         List<Cell> ret = new List<Cell>();
         foreach (var direction in _directions4)
@@ -194,6 +207,27 @@ public abstract class Hexagon : Cell
         }
         return ret;
     }
+
+
+	/// <summary>
+	/// For white Throng
+	/// </summary>
+	/// <returns>The reverse3 line neighbours.</returns>
+	/// <param name="cells">Cells.</param>
+	public List<Cell> GetBackNeighbour(List<Cell> cells){
+		List<Cell> ret = new List<Cell> ();
+		var neighbour = cells.Find(c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + _directions[4]));
+		if (neighbour == null)
+			return ret;
+		else if (neighbour.IsTaken && neighbour.playerIndex != playerIndex) {
+			ret.Add (neighbour);
+			return ret;
+		} else if (neighbour.IsTaken)
+			return ret;
+		
+		ret.Add(neighbour);
+		return ret;
+	}
 
 
 	public List<Cell> GetMinoriteCells(List<Cell> cells){
@@ -239,23 +273,35 @@ public abstract class Hexagon : Cell
 		List<Cell> ret = new List<Cell> ();
 		//Debug.Log (cells.Count);
 		foreach (var direction in _directions5) {
-			
 			var neighbour = cells.Find (c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction));
 			if (neighbour == null)
 				break;
 			else if (neighbour.IsTaken && neighbour.playerIndex != playerIndex) {
 				ret.Add (neighbour);
 			} else {
-				Debug.Log (neighbour.IsTaken);
-				Debug.Log (neighbour.playerIndex);
-				Debug.Log (playerIndex);
 				continue;
 			}
-			
 		}
-		Debug.Log ("heh" + ret.Count);
 		return ret;
 	}
+
+	public List<Cell> GetEnemyOccupiedBackNeighbours(List<Cell> cells){
+		List<Cell> ret = new List<Cell> ();
+		foreach (var direction in _directions8) {
+			var neighbour = cells.Find (c => c.OffsetCoord == CubeToOffsetCoords(CubeCoord + direction));
+			if (neighbour == null)
+				break;
+			else if (neighbour.IsTaken && neighbour.playerIndex != playerIndex) {
+				ret.Add (neighbour);
+			} else {
+				continue;
+			}
+		}
+		return ret;
+	}
+
+
+
 }
 
 public enum HexGridType
