@@ -80,7 +80,6 @@ def getAccount(_username)
 			games_played, \
 			games_won, \
 			friends_list, \
-			friend_req_made,\
 			friend_req_rec)
 	rescue Mysql::Error => e
 		puts "ERROR"
@@ -241,7 +240,6 @@ def acceptFriendRequest(_playerid, _myid)
 			SET status=0 \
 			WHERE requester=#{_playerid} \
 			AND receiver=#{_myid};")
-
 	rescue Mysql::Error => e
 		puts "ERROR"
 		puts "Error Code: #{e.errno}"
@@ -254,12 +252,12 @@ end
 
 # Public: Adjusts database values when a friend request is denied
 #
-# _player - Username of player who sent the friend request
+# _playerid - Id of player who made friend request
 # _myid - Id of player who denied the friend request
 #
 # Returns nothing
 #
-def denyFriendRequest(_player, _myid)
+def denyFriendRequest(_playerid, _myid)
 	begin
 		# Establish connection with database
 		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE)
@@ -288,8 +286,8 @@ end
 
 # Public: Removes a player's own id from another player's friends list
 #
-# _player - Username of player who is losing a friend
-# _myid - Base 10 id of player requesting the divorce of friendship
+# _playerid - Id of player not requesting divorce of friendship
+# _myid - Id of player requesting the divorce of friendship
 #
 # Returns nothing
 #
@@ -299,8 +297,10 @@ def destroyFriendship(_playerid, _myid)
 
 		rs = dbc.query("SELECT status |
 			FROM friends \
-			WHERE requester=#{_playerid} \
-			AND receiver=#{_myid};")
+			WHERE (requester=#{_playerid} \
+			AND receiver=#{_myid}) \
+			OR (requester=#{_myid} \
+			AND receiver=#{_playerid});")
 
 		if rs.num_rows < 1 then
 			return
@@ -311,7 +311,6 @@ def destroyFriendship(_playerid, _myid)
 			AND receiver=#{_myid}) \
 			OR (requester=#{_myid} \
 			AND receiver=#{_playerid};")
-
 	rescue Mysql::Error => e
 		puts "ERROR"
 		puts "Error Code: #{e.errno}"
