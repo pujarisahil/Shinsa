@@ -45,15 +45,7 @@ public class ShinsaGuiController : MonoBehaviour {
 
 		OnTurnEnded(sender,e);
 	}
-
-	/// <summary>
-	/// Surrender this instance.
-	/// </summary>
-	public void Surrender(){
-		Time.timeScale = 0f;
-		//photonNetworkManager.thisPlayerNumber
-	}
-
+		
 
 	private void OnGameEnded(object sender, EventArgs e){
 
@@ -68,8 +60,7 @@ public class ShinsaGuiController : MonoBehaviour {
 	/// </summary>
 	private void OnCellDehighlighted(object sender, EventArgs e)
 	{
-		//UnitImage.color = Color.gray;
-		//StatsText.text = "";
+		StatsText.text = "";
 	}
 
 	/// <summary>
@@ -77,8 +68,7 @@ public class ShinsaGuiController : MonoBehaviour {
 	/// </summary>
 	private void OnCellHighlighted(object sender, EventArgs e)
 	{
-		//UnitImage.color = Color.gray;
-		//StatsText.text = "Movement Cost: " + (sender as Cell).MovementCost;
+		StatsText.text = "";
 	}
 
 	private void OnUnitDehighlighted(object sender, EventArgs e)
@@ -95,7 +85,7 @@ public class ShinsaGuiController : MonoBehaviour {
 		var unit = sender as shinsaUnit;
 		if (unit.PlayerNumber == CellGrid.CurrentPlayerNumber) {
 			swapPicts (unit, true);
-			StatsText.text = unit.UnitName /*+ "\nHit Points: " + unit.HitPoints +"/"+unit.TotalHitPoints + "\nAttack: " + unit.AttackFactor + "\nDefence: " + unit.DefenceFactor + */ + "\n Range:" + unit.AttackRange;
+			StatsText.text = unit.UnitName;
 			swapMaterial (sender as shinsaUnit, true);
 		}
 	}
@@ -118,13 +108,13 @@ public class ShinsaGuiController : MonoBehaviour {
 			UnitImage.sprite = UnitImagePool [2];
 		} else if (unit.UnitName == "Minorite" && toImage)
 			UnitImage.sprite = UnitImagePool [3];
-		else if (unit.UnitName == "Perceptor" && toImage)
+		else if (unit.UnitName == "Preceptor" && toImage)
 			UnitImage.sprite = UnitImagePool [4];
 		else if (unit.UnitName == "HighPerceptor" && toImage)
 			UnitImage.sprite = UnitImagePool [5];
 		if (!toImage)
 		{
-			UnitImage.sprite = UnitImagePool[UnitImagePool.Length - 1];
+			UnitImage.sprite = UnitImagePool [6];
 		}
 	}
 
