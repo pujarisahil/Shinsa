@@ -5,7 +5,6 @@ require_relative 'access_account'
 #Friend Object
 class Friend
 	def initialize(_account, _id)
-        puts "ok"
 		@id = _id
 		friend_data = getFriend(_id)
 		@username = friend_data[0]
