@@ -14,18 +14,19 @@ DB_DATABASE = 'shinsa'
 
 @accounts_schema = "accounts (
 	id INT,
-  username VARCHAR(50),
-  password VARCHAR(200),
+	username VARCHAR(50),
+	password VARCHAR(200),
 	firstname VARCHAR(30),
 	lastname VARCHAR(30),
 	score INTEGER,
 	games_played INTEGER,
 	games_won INTEGER,
-	friends_list VARCHAR(500),
-	friend_req_made VARCHAR(50),
-	friend_req_rec VARCHAR(50),
-	friend_req_acc VARCHAR(50),
-	friend_req_den VARCHAR(50)
+)"
+
+@friends_schema = "friends (
+	requester INTEGER,
+	receiver INTEGER,
+	status INT(1)
 )"
 
 @loggedin_schema = "loggedin (
