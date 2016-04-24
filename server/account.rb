@@ -78,18 +78,20 @@ class Account
 	# _score - Player's current score
 	# _games_played - The number of games the player has played
 	# _games_won - The number of games the player has won
-	# _friends_list - String of friend ids in base 62
-	# _friend_req_made - String of friend requests made in base 62
-	# _friend_req_rec - String of friend requests made in base 62
-	# _friend_req_acc - String of accepted sent friend requests in base 62
-	# _friend_req_den - String of denied sent friend requests in base 62
+	# _friends_list - Array of player ids who are already friends
+	# _friend_req_rec - Array of player ids who are requesting to be friends
 	#
 	# Returns nothing
 	#
-	def initialize(_id, _username, _firstname, _lastname, _score, \
-			_games_played, _games_won, _friends_list, \
-			_friend_req_made, _friend_req_rec, _friend_req_acc, \
-			_friend_req_den)
+	def initialize(_id, \
+			_username, \
+			_firstname, \
+			_lastname, \
+			_score, \
+			_games_played, \
+			_games_won, \
+			_friends_list, \
+			_friend_req_rec)
 		@id = Integer(_id)
 		@username = _username
 		@realname = "#{_firstname} #{_lastname}"
@@ -97,60 +99,16 @@ class Account
 		@games_played = Integer(_games_played)
 		@games_won = Integer(_games_won)
 
-		# If the friends list is not empty, split the string
-		# Otherwise, create a new array
-		if _friends_list != nil then
-			temp_friend_list = _friends_list.split(',')
-			for i in 0..(temp_friend_list.size - 1)
-				@friends_list[i] = con62to10(temp_friend_list[i])
-			end
+		if _friends_list.length > 0 then
+			@friends_list = _friends_list
 		else
-            		@friends_list = nil
+			@friends_list = Array.new(0)
 		end
 
-		# If the friend requests made list is not empty, split the string
-		# Otherwise, create a new array
-		if _friend_req_made != nil then
-			temp_friend_req_made = _friend_req_made.split(',')
-			for i in 0..(temp_friend_req_made.size - 1)
-				@friend_req_made[i] = \
-					con62to10(temp_friend_req_made[i])
-			end
+		if _friend_req_rec.length > 0 then
+			@friend_req_rec = _friend_req_rec
 		else
-            		@friend_req_made = nil
-		end
-
-		# If the friend requests received list is not empty, split the string
-		# Otherwise, create a new array
-		if _friend_req_rec != nil then
-			temp_friend_req_rec = _friend_req_rec.split(',')
-			for i in 0..(temp_friend_req_rec.size - 1)
-				@friend_req_rec[i] = con62to10(temp_friend_req_rec[i])
-			end
-		else
-            		@friend_req_rec = nil
-		end
-
-		# If the friend requests accepted list is not empty, split the string
-		# Otherwise, create a new array
-		if _friend_req_acc != nil then
-			temp_friend_req_acc = _friend_req_acc.split(',')
-			for i in 0..(temp_friend_req_acc.size - 1)
-				@friend_req_acc[i] = con62to10(temp_friend_req_acc[i])
-			end
-		else
-			@friend_req_acc = nil
-		end
-
-		# If the friend requests denied list is not empty, split the string
-		# Otherwise, create a new array
-		if _friend_req_den != nil then
-			temp_friend_req_den = _friend_req_den.split(',')
-			for i in 0..(temp_friend_req_den.size - 1)
-				@friend_req_den[i] = con62to10(temp_friend_req_den[i])
-			end
-		else
-			@friend_req_den = nil
+			@friend_req_rec = Array.new(0)
 		end
 
 		account_in_array = false
@@ -222,12 +180,12 @@ class Account
 
 	# Public: Called when the player starts a game
 	#
-	# _account - account of opponent
+	# _opponent_score - Score of opponent
 	#
 	# Returns nothing
 	#
-	def gameStart(_account)
-		@expected_score = prematchScores(@score, _account.getScore())
+	def gameStart(_opponent_score)
+		@expected_score = prematchScores(@score, _opponent_score)
 	end
 
 
@@ -267,26 +225,15 @@ class Account
 	# Returns array of Friend Objects
 	#
 	def getFriendsList()
-        if @friends_list == nil then
-		return nil
-        end
-		friend_array = Array.new(@friends_list.size)
-		for i in 0..(@friends_list.size - 1)
-			friend_array[i] = Friend.new(self, con62to10(@friends_list[i]))
+        	if @friends_list == nil then
+			return nil
+	        end
+		friend_array = Array.new(@friends_list.length)
+		for i in 0..(@friends_list.length - 1)
+			friend_array[i] = Friend.new(self, @friends_list[i])
 		end
 
 		return friend_array
-	end
-
-
-	# Public: Sets Friends List
-	#
-	# _friends_list - Updated friends list
-	#
-	# Returns nothing
-	#
-	def setFriendsList(_friends_list)
-		@friends_list = _friends_list
 	end
 
 
@@ -299,83 +246,18 @@ class Account
 	end
 
 
-	# Public: Returns friend requests made
-	#
-	# Returns array of player ids of friends requested
-	#
-	def getFriendReqMade()
-		return @friend_req_made
-	end
-
-
-	# Public: Sets Friend Requests Made List
-	#
-	# _friend_req_made - Updated friend requests made list
-	#
-	# Returns nothing
-	#
-	def setFriendReqMade(_friend_req_made)
-		@friend_req_made = _friend_req_made
-	end
-
-
 	# Public: Returns friend requests received
 	#
 	# Returns array of player ids of friend requests received
 	#
-	def getFriendReqRec()
-		return @friend_req_rec
-	end
-
-
-	# Public: Sets Friend Requests Received List
-	#
-	# _friend_req_rec - Updated friend requests received list
-	#
-	# Returns nothing
-	#
-	def setFriendReqRec(_friend_req_rec)
-		@friend_req_rec = _friend_req_rec
-	end
-
-
-	# Public: Returns friend requests made and accepted
-	#
-	# Returns array of player ids of friends requested and accepted
-	#
-	def getFriendReqAcc()
-		return @friend_req_acc
-	end
-
-
-	# Public: Sets Accepted Friends List
-	#
-	# _friend_req_acc - Updated accepted friends list
-	#
-	# Returns nothing
-	#
-	def setFriendReqAcc(_friend_req_acc)
-		@friend_req_acc = _friend_req_acc
-	end
-
-
-	# Public: Returns friend requests made and denied
-	#
-	# Returns array of player ids of friends requested and denied
-	#
-	def getFriendReqDen()
-		return @friend_req_den
-	end
-
-
-	# Public: Sets Denied Friends List
-	#
-	# _friend_req_den - Updated denied friends list
-	#
-	# Returns nothing
-	#
-	def setFriendReqDen(_friend_req_den)
-		@friend_req_den = _friend_req_den
+	def getFriendRequests()
+		if @friend_req_rec == nil then
+			return nil
+		end
+		friend_req_array = Array.new(@friends_req_rec.length)
+		for i in 0..(@friend_req_rec.length - 1)
+			friend_req_array[i] = Friend.new(self, @friend_req_rec[i])
+		end
 	end
 
 
@@ -407,34 +289,7 @@ class Account
 		#Get base 10 id of friend
 		friend_id = findId(_friend)
 
-		# If the player is online, adjust their Account object
-		# Otherwise, adjust their database entry
-		if isOnline(friend_id) then
-			account = findAccount(friend_id)
-			friends_array = account.getFriendsListId()
-			temp_array = Array.new(friends_array.size - 1)
-			j = 0
-			for i in 0..(friends_array.size - 1)
-				if con62to10(friends_array[i]) != @id then
-					temp_array[j] = friends_array[i]
-					j += 1
-				end
-			end
-			account.setFriendsList(temp_array)
-		else
-			destroyFriendship(_friend, @id)
-		end
-
-		friendsSize = @friends_list.size
-		new_friends = Array.new(friendsSize - 1)
-		j = 0
-		for i in 0..(friendsSize - 1)
-			if con62to10(@friends_list[i]) != friend_id then
-				new_friends[j] = @friends_list[i]
-				j += 1
-			end
-		end
-		@friends_list = new_friends
+		destroyFriendship(friend_id, @id)
 	end
 
 
@@ -448,39 +303,7 @@ class Account
 		# Get base 10 id of _player
 		player_id = findId(_player)
 
-		# If the player is online, adjust their Account object
-		# Otherwise, adjust their database entry
-		if isOnline(player_id) then
-			# Retrieve other player's Account
-			account = findAccount(player_id)
-			req_rec = account.getFriendReqRec()
-            		if req_rec == nil then
-                		temp_array = Array.new(1)
-                		temp_array[0] = con10to62(@id)
-            		else
-                		temp_array = Array.new(req_rec.size + 1)
-                		for i in 0..(req_rec.size - 1)
-					temp_array[i] = req_rec
-                		end
-                		temp_array[req_rec.size] = con10to62(@id)
-			end
-			account.setFriendReqRec(temp_array)
-		else
-			makeFriendRequest(_player, @id)
-		end
-
-		# Add base 62 id of player whose friendship is requested
-		if @friend_req_made == nil then
-			@friend_req_made = Array.new(1)
-			@friend_req_made[0] = con10to62(player_id)
-		else
-			temp_array = Array.new(@friend_req_made.size + 1)
-			for i in 0..(@friend_req_made.size - 1)
-				temp_array[i] = @friend_req_made[i]
-			end
-			temp_array[@friend_req_made.size] = con10to62(player_id)
-			@friend_req_made = temp_array
-		end
+		makeFriendRequest(player_id, @id)
 	end
 
 
@@ -494,80 +317,7 @@ class Account
 		# Get base 10 id of _player
 		player_id = findId(_player)
 
-		# If the player is online, adjust their Account Object
-		# Otherwise, adjust their database entry
-		if isOnline(player_id) then
-			account = findAccount(player_id)
-
-			# Adds accepting player's base 62 id to original
-			# player's 'friend_req_acc' value in their Account
-			req_acc = account.getFriendReqAcc()
-			if req_acc == nil then
-                		temp_array = Array.new(1)
-				temp_array[0] = con10to62(@id)
-			else
-				temp_array = Array.new(req_acc.size + 1)
-				for i in 0..(req_acc.size - 1)
-					temp_array[i] = req_acc[i]
-				end
-				temp_array[req_acc.size] = con10to62(@id)
-			end
-			account.setFriendReqAcc(temp_array)
-
-			# Removes accepting player's base 62 id from original
-			# player's 'freind_req_made' value in their Account
-			req_made = account.getFriendReqMade()
-			temp_array = Array.new(req_made.size - 1)
-			j = 0
-			for i in 0..(req_made.size - 1)
-				if con62to10(req_made[i]) != @id then
-					temp_array[j] = req_made[i]
-					j += 1
-				end
-			end
-			account.setFriendReqMade(temp_array)
-
-			# Adds accepting player's base 62 id to original
-			# player's 'friends_list' value in their Account
-			f_list = account.getFriendsListId()
-			if f_list == nil then
-				temp_array = Array.new(1)
-				temp_array[0] = con10to62(@id)
-			else
-				temp_array = Array.new(f_list.size + 1)
-				for i in 0..(f_list.size - 1)
-					temp_array[i] = f_list[i]
-				end
-				temp_array[f_list.size] = con10to62(@id)
-			end
-				account.setFriendsList(temp_array)
-		else
-			acceptFriendRequest(_player, @id)
-		end
-
-		# Add the asking player to this player's friends_list
-		if @friends_list == nil then
-            		@friends_list = Array.new(1)
-			@friends_list[0] = con10to62(player_id)
-		else
-			temp_array = Array.new(@friends_list.size + 1)
-			for i in 0..(@friends_list.size - 1)
-				temp_array[i] = @friends_list[i]
-			end
-			temp_array[@friends_list.size] = con10to62(player_id)
-			@friends_list = temp_array
-		end
-
-		# Remove the asking player from this player's friend_req_rec
-		temp_array = Array.new(@friend_req_rec.size - 1)
-		j = 0
-		for i in 0..(@friend_req_rec.size - 1)
-			if con62to10(@friend_req_rec[i]) != player_id then
-				temp_array[j] = @friend_req_rec[i]
-				j += 1
-			end
-		end
-		@friend_req_rec = temp_array
+		acceptFriendRequest(player_id, @id)
 	end
 
 
@@ -581,52 +331,7 @@ class Account
 		# Get base 10 id of _player
 		player_id = findId(_player)
 
-		# If the player is online, adjust their Account Object
-		# Otherwise, adjust their database entry
-		if isOnline(player_id) then
-			account = findAccount(player_id)
-
-			# Add denying player's base 62 id to original
-			# player's 'friend_req_den' value in the Account
-			req_den = account.getFriendReqDen()
-			if req_den == nil then
-				temp_array = Array.new(1)
-				temp_array[0] = con10to62(@id)
-			else
-				temp_array = Array.new(req_den.size + 1)
-				for i in 0..(req_den.size - 1)
-					temp_array[i] = req_den[i]
-				end
-				temp_array[req_den.size] = con10to62(@id)
-			end
-			account.setFriendReqDen(temp_array)
-
-			# Removes accepting player's base 62 id from original
-			# player's 'friend_req_made' value in the Account
-			req_made = account.getFriendReqMade()
-			temp_array = Array.new(req_made.size - 1)
-			j = 0
-			for i in 0..(req_made.size - 1)
-				if con62to10(req_made[i]) != @id then
-					temp_array[j] = req_made[i]
-					j += 1
-				end
-			end
-			account.setFriendReqMade(temp_array)
-		else
-			denyFriendRequest(_player, @id)
-		end
-
-		# Remove the asking player from this player's friend_req_rec
-		temp_array = Array.new(@friend_req_rec.size - 1)
-		j = 0
-		for i in 0..(@friend_req_rec.size - 1)
-			if con62to10(@friend_req_rec[i]) != player_id then
-				temp_array[j] = @friend_req_rec[i]
-				j += 1
-			end
-		end
-		@friend_req_rec = temp_array
+		denyFriendRequest(player_id, @id)
 	end
 
 
