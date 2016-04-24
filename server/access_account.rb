@@ -304,3 +304,27 @@ def destroyFriendship(_playerid, _myid)
 		dbc.close if dbc
 	end
 end
+
+
+# Public: Logs winner of match
+# 
+# _winnerid - Id of winner
+# _loserid - Id of loser
+#
+# Returns nothing
+#
+def logGame(_winnerid, _loserid)
+	begin
+		dbc = Mysql.new(DB_SERVER, DB_USER, DB_PASSWORD, DB_DATABASE)
+
+		rs = dbc.query("INSERT INTO logs \
+			VALUES (NOW(), #{_winnerid}, #{_loserid});")
+
+	rescue Mysql:Error => e
+		puts "ERROR"
+		puts "Error Code: #{e.errno}"
+		puts "Error Message: #{e.error}"
+	ensure
+		dbc.close if dbc
+	end
+end

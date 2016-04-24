@@ -36,6 +36,7 @@ DB_DATABASE = 'shinsa'
 )"
 
 @logs_schema = "logs (
+	timestamp TIMESTAMP(),
 	player1 INT,
 	player2 INT,
 )"
