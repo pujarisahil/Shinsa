@@ -32,6 +32,9 @@ public class photonNetworkManager : Photon.PunBehaviour {
 		TurnStatus.SetActive (true);
 	}
 
+	public void closeRoom(){
+		PhotonNetwork.room.open = false;
+	}
 
 	void OnJoinedRoom(){
 		GameObject player = PhotonNetwork.Instantiate ("HumanPlayer", Vector3.zero, Quaternion.identity, 0);
@@ -52,10 +55,7 @@ public class photonNetworkManager : Photon.PunBehaviour {
 		} else {
 			winPanel.SetActive (true);
 		}
-
-		PhotonNetwork.Disconnect ();
 	}
-
 
 	[PunRPC]
 	public void changeTurnOnFly(){

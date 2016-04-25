@@ -21,6 +21,7 @@ public class playerNumberCheck : MonoBehaviour {
 			grid.enabled = true;
 			lok = false;
 			gameStarted = true;
+			GameObject.Find ("NetworkManager").GetComponent<photonNetworkManager> ().closeRoom ();
 		}
 		if (gameStarted && transform.childCount == 1) {
 			//one player quit, announce winner
