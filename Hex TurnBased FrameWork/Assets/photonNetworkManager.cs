@@ -49,12 +49,15 @@ public class photonNetworkManager : Photon.PunBehaviour {
 
 	[PunRPC]
 	public void WinAndLoss(int loserIndex){
-		Time.timeScale = 0f;
+		//Time.timeScale = 0f;
 		if (loserIndex == thisPlayerNumber) {
 			lossPanel.SetActive (true);
 		} else {
 			winPanel.SetActive (true);
 		}
+		cellgrid.removeCellEvent ();
+		//cellgrid.enabled = false;
+
 	}
 
 	[PunRPC]
@@ -98,11 +101,12 @@ public class photonNetworkManager : Photon.PunBehaviour {
 	void Update(){
 
 		connectionStatusText.text = PhotonNetwork.connectionStateDetailed.ToString ();
+		/*
 		Debug.LogWarning ("Local ownership is " + PhotonNetwork.player.ID);
 		Debug.LogWarning ("That remote ownership is" + PhotonNetwork.otherPlayers[0].ID);
 		Debug.LogWarning ("playernumber is " + PhotonNetwork.playerList.Length);
 		Debug.Log ("this number is" + thisPlayerNumber);
-
+*/
 		if (currentTurnOwner == thisPlayerNumber) {
 			cellgrid.StartTurn ();
 			enemyTurnText.enabled = false;

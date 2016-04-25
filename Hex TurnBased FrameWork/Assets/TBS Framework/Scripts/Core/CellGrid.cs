@@ -11,6 +11,10 @@ public class CellGrid : MonoBehaviour
 {
 	public bool boolLock = false;
 
+	public AudioClip clickSound;
+	public AudioClip turnSound;
+	private AudioSource audio;
+
 	public event EventHandler GameStarted;
     public event EventHandler GameEnded;
     public event EventHandler TurnEnded;
@@ -89,8 +93,23 @@ public class CellGrid : MonoBehaviour
         else
             Debug.LogError("No IUnitGenerator script attached to cell grid");
         
+		audio = GetComponent<AudioSource> ();
         StartGame();
     }
+
+
+	public void removeCellEvent(){
+		foreach (var cell in Cells)
+		{
+			cell.CellClicked -= OnCellClicked;
+			cell.CellHighlighted -= OnCellHighlighted;
+			cell.CellDehighlighted -= OnCellDehighlighted;
+		}
+	}
+	private void playAudio(AudioClip clip){
+		audio.clip = clip;
+		audio.Play ();
+	}
 
     private void OnCellDehighlighted(object sender, EventArgs e)
     {
@@ -107,6 +126,7 @@ public class CellGrid : MonoBehaviour
 
     private void OnUnitClicked(object sender, EventArgs e)
     {
+		playAudio (clickSound);
         CellGridState.OnUnitClicked(sender as Unit);
     }
 
@@ -116,7 +136,6 @@ public class CellGrid : MonoBehaviour
 			if(GameEnded != null)
 				GameEnded.Invoke(sender, new EventArgs());
 		}
-        //Units.Remove(sender as Unit);
     }
 
 
@@ -142,6 +161,7 @@ public class CellGrid : MonoBehaviour
     /// </summary>
     public void EndTurn()
     {
+		
         if (Units.Select(u => u.PlayerNumber).Distinct().Count() == 1)
         {
             return;
@@ -154,9 +174,9 @@ public class CellGrid : MonoBehaviour
         if (TurnEnded != null)
             TurnEnded.Invoke(this, new EventArgs());
 		
-		Debug.Log ("this reaches to here!@#WEAAFWFEFAWEFADASAEFA");
-
+		//Debug.Log ("this reaches to here!@#WEAAFWFEFAWEFADASAEFA");
 		//GameObject.Find ("NetworkManager").GetComponent<photonNetworkManager> ().changeTurnOnFly ();
+		playAudio(turnSound);
 		GameObject.Find ("NetworkManager").GetComponent<PhotonView> ().RPC ("changeTurnOnFly",PhotonTargets.All);
 		boolLock = false;
 		CurrentPlayerNumber = GameObject.Find ("NetworkManager").GetComponent<photonNetworkManager> ().currentTurnOwner;   

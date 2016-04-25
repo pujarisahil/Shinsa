@@ -13,8 +13,6 @@ public class ShinsaGuiController : MonoBehaviour {
 	public Text InfoText;
 	public Text StatsText;
 
-
-
 	public Material highlightingMaterial;
 	public Material UnitDefaultMaterial;
 
@@ -49,7 +47,6 @@ public class ShinsaGuiController : MonoBehaviour {
 		networkManager.gameObject.GetComponent<PhotonView> ().RPC ("WinAndLoss", PhotonTargets.All, (sender as shinsaUnit).PlayerNumber);
 	}
 	private void OnTurnEnded(object sender, EventArgs e){
-
 	}
 
 
