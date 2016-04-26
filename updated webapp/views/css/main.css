@@ -152,10 +152,12 @@ a:focus {
   display: block;
   width: 100%;
 }
+
 .logo-left {
   color: #fff;
   font-size: 24px;
 }
+
 .logo-left i {
   margin-right: 7px;
 }
@@ -216,7 +218,7 @@ a:focus {
   }
 }
 .hero-area {
-  background: url(../img/bg1.jpg) no-repeat;
+  background: url(../img/brownbg.jpg) no-repeat;
   background-size: cover;
   /*background-position: center bottom;*/
   color: #fff;
