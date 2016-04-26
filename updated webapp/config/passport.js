@@ -2,7 +2,7 @@
 
 // load all the things we need
 var LocalStrategy   = require('passport-local').Strategy;
-
+var Strategy = require('passport-facebook').Strategy;
 // load up the user model
 var mysql = require('mysql');
 var bcrypt = require('bcrypt-nodejs');
@@ -37,6 +37,23 @@ module.exports = function(passport) {
         });
     });
 
+
+passport.use(new Strategy({
+    clientID: "611923268955973",
+    clientSecret: "bfe7605557db8583f683c7addf900b8c",
+    callbackURL: '/profile'
+  },
+  function(accessToken, refreshToken, profile, cb) {
+    // In this example, the user's Facebook profile is supplied as the user
+    // record.  In a production-quality application, the Facebook profile should
+    // be associated with a user record in the application's database, which
+    // allows for account linking and authentication with other identity
+    // providers.
+    return cb(null, profile);
+  }));
+  
+  
+  
     // =========================================================================
     // LOCAL SIGNUP ============================================================
     // =========================================================================

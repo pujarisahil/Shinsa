@@ -205,5 +205,5 @@ form#girisyap .girisbtn{   width: auto;
     #moveright:hover { background: #363A3D; }
 
     #fback { width: 100%; height: 100%; position: absolute; z-index: -9999; }
-    .girisback { position: absolute; right: 0; width: 50%; height: 100%; background: #03A9F4 url(signup.jpg); background-size: cover; background-position: 50% 50%;}
-    .kayitback { position: absolute; left: 0; width: 50%; height: 100%; background: #03A9F4 url(login.png); background-size: cover; background-position: 50% 50%;}
+    .girisback { position: absolute; right: 0; width: 50%; height: 100%; background: #03A9F4 url(../img/sahinsa.png); background-size: cover; background-position: 50% 50%;}
+    .kayitback { position: absolute; left: 0; width: 50%; height: 100%; background: #03A9F4 url(../img/chess-strategy.jpeg); background-size: cover; background-position: 50% 50%;}

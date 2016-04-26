@@ -117,27 +117,19 @@
 <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp" style="width: 100%; height: 100%;">
   <thead>
     <tr>
-      <th class="mdl-data-table__cell--non-numeric">Material</th>
-      <th>Quantity</th>
-      <th>Unit price</th>
+      <th class="mdl-data-table__cell--non-numeric">Time</th>
+      <th>WinnerID</th>
+      <th>LoserID</th>
     </tr>
   </thead>
   <tbody>
+    <% for(var i = 0 ; i < rows.length; i++) { %>
     <tr>
-      <td class="mdl-data-table__cell--non-numeric">Acrylic (Transparent)</td>
-      <td>25</td>
-      <td>$2.90</td>
+      <td class="mdl-data-table__cell--non-numeric"><%= rows[i].timestamp %></td>
+      <td><%= rows[i].player1 %></td>
+      <td><%= rows[i].player2 %></td>
     </tr>
-    <tr>
-      <td class="mdl-data-table__cell--non-numeric">Plywood (Birch)</td>
-      <td>50</td>
-      <td>$1.25</td>
-    </tr>
-    <tr>
-      <td class="mdl-data-table__cell--non-numeric">Laminate (Gold on Blue)</td>
-      <td>10</td>
-      <td>$2.35</td>
-    </tr>
+    <% } %>
   </tbody>
 </table>
 	</main>

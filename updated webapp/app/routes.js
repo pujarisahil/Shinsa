@@ -13,7 +13,15 @@ module.exports = function(app, passport) {
   app.get("/", function(req, res) {
     res.render("landing");
   });
+app.get('/login/facebook',
+  passport.authenticate('facebook'));
 
+app.get('/login/facebook/return', 
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  function(req, res) {
+    res.redirect('/');
+  });
+  
   /*
    * Routes to the register page which is the account creation page
    */
@@ -24,6 +32,7 @@ module.exports = function(app, passport) {
   });
 
   app.get("/profile", isLoggedIn, function(req, res) {
+    console.log(res.profile);
     connection.query("SELECT COUNT(score) FROM accounts WHERE score>=" + req.user.score + ";", function(err, rows) {
       if (err)
         console.log(err);
@@ -148,7 +157,6 @@ module.exports = function(app, passport) {
     res.render('tutorial.ejs', {
       user: req.user
     });
-
   });
 
   app.get("/gamelogs", isLoggedIn, function(req, res) {
@@ -156,23 +164,45 @@ module.exports = function(app, passport) {
       if (err)
         console.log(err);
       if (rows.length) {
-        console.log("User was found");
+        
+        res.render('gamelogs.ejs', {
+      user: req.user,
+      rows : rows
+    });
       }
       else {
-        console.log("User wasn't found");
+        
+        res.render('gamelogs.ejs', {
+      user: req.user,
+      rows : rows
+    });
       }
     });
 
-    res.render('gamelogs.ejs', {
-      user: req.user
-    });
+    
 
   });
 
   app.get("/leaderboard", isLoggedIn, function(req, res) {
-    res.render('leaderboard.ejs', {
-      user: req.user
+    connection.query("SELECT username FROM accounts ORDER BY score DESC", function(err, rows) {
+      if (err)
+        console.log(err);
+      if (rows.length) {
+        
+        res.render('leaderboard.ejs', {
+      user: req.user,
+      rows : rows
     });
+      }
+      else {
+        
+        res.render('leaderboard.ejs', {
+      user: req.user,
+      rows : rows
+    });
+      }
+    });
+
 
   });
 
@@ -375,5 +405,6 @@ module.exports = function(app, passport) {
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated())
     return next();
-  res.redirect('/login');
+    console.log("I was executed");
+  // res.redirect('/login');
 }
