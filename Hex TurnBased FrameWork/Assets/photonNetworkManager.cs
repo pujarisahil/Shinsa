@@ -17,6 +17,7 @@ public class photonNetworkManager : Photon.PunBehaviour {
 	public GameObject TurnStatus;
 	public Text yourTurnText;
 	public Text enemyTurnText;
+	public static string currentUsername;
 	public Image indicationLight;
 
 	public GameObject winPanel;
@@ -40,6 +41,11 @@ public class photonNetworkManager : Photon.PunBehaviour {
 
 	public void closeRoom(){
 		PhotonNetwork.room.open = false;
+		if (thisPlayerNumber == 1) {
+			GetComponent<PhotonView> ().RPC ("nameRegistration", PhotonTargets.Others, "PlayerUI2", currentUsername);
+		} else if (thisPlayerNumber == 2) {
+			GetComponent<PhotonView> ().RPC ("nameRegistration", PhotonTargets.Others, "PlayerUI1",currentUsername);
+		}
 	}
 
 	void OnJoinedRoom(){
@@ -50,6 +56,11 @@ public class photonNetworkManager : Photon.PunBehaviour {
 		StartCoroutine (Joined ());
 
 		Application.ExternalEval ("GetUsername()");
+	}
+
+	[PunRPC]
+	public void nameRegistration(string str, string name){
+		GameObject.Find (str).transform.GetChild (0).gameObject.GetComponent<Text> ().text = name;
 	}
 
 	[PunRPC]

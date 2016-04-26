@@ -10,8 +10,10 @@ public class AssignUsername : MonoBehaviour {
 	public void assignInfo(string username){
 		if (photonNetworkManager.thisPlayerNumber == 1) {
 			username1.text = username;
+			photonNetworkManager.currentUsername = username;
 		} else if(photonNetworkManager.thisPlayerNumber == 2) {
 			username2.text = username;
+			photonNetworkManager.currentUsername = username;
 		}
 	}
 }
