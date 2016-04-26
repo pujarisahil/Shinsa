@@ -49,7 +49,7 @@ public class photonNetworkManager : Photon.PunBehaviour {
 		GetComponent<PhotonView> ().RPC ("setUnitPlayerNum", PhotonTargets.AllBuffered, player.GetComponent<Player> ().unitSetName, PhotonNetwork.player.ID);
 		StartCoroutine (Joined ());
 
-		Application.ExternalEval ("GetUsername");
+		Application.ExternalEval ("GetUsername()");
 	}
 
 	[PunRPC]
