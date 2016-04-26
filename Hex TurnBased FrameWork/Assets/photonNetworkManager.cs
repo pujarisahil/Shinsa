@@ -22,8 +22,14 @@ public class photonNetworkManager : Photon.PunBehaviour {
 	public GameObject winPanel;
 	public GameObject lossPanel;
 
+
+	//public float TurnLastingTime = 300f;
+	//private float time;
+	//public Text timerText;
+
 	void Start () {
 		PhotonNetwork.ConnectUsingSettings ("0.1");
+		//time = TurnLastingTime;
 	}
 
 	IEnumerator Joined(){
@@ -43,8 +49,7 @@ public class photonNetworkManager : Photon.PunBehaviour {
 		GetComponent<PhotonView> ().RPC ("setUnitPlayerNum", PhotonTargets.AllBuffered, player.GetComponent<Player> ().unitSetName, PhotonNetwork.player.ID);
 		StartCoroutine (Joined ());
 
-
-		//Application.ExternalEval ("GetUsername");
+		Application.ExternalEval ("GetUsername");
 	}
 
 	[PunRPC]
@@ -56,8 +61,7 @@ public class photonNetworkManager : Photon.PunBehaviour {
 			winPanel.SetActive (true);
 		}
 		cellgrid.removeCellEvent ();
-		//cellgrid.enabled = false;
-
+		//stopTimer ();
 	}
 
 	[PunRPC]
@@ -66,7 +70,24 @@ public class photonNetworkManager : Photon.PunBehaviour {
 			currentTurnOwner = 2;
 		else if (currentTurnOwner == 2)
 			currentTurnOwner = 1;
+		/*
+		if (currentTurnOwner == thisPlayerNumber && player.transform.childCount == 2)
+			startTimer ();
+		else
+			stopTimer ();
+			*/
 	}
+
+	/*
+	public void startTimer(){
+		//time = TurnLastingTime;
+		StartCoroutine (timer());
+	}
+	public void stopTimer(){
+		StopCoroutine (timer());
+		//timerText.enabled = false;
+	}
+	*/
 
 	void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info){
 		if (stream.isWriting) {
@@ -98,23 +119,29 @@ public class photonNetworkManager : Photon.PunBehaviour {
 		PhotonNetwork.CreateRoom (null, new RoomOptions(){maxPlayers = 2}, null);
 	}
 
+	/*
+	IEnumerator timer(){
+		timerText.enabled = true;
+		while (time > 0) {
+			time -= Time.deltaTime;
+			timerText.text = Mathf.Round (time).ToString ();
+			yield return null;
+		}
+		timerText.enabled = false;
+		cellgrid.EndTurn ();
+	}
+*/
 	void Update(){
 
 		connectionStatusText.text = PhotonNetwork.connectionStateDetailed.ToString ();
-		/*
-		Debug.LogWarning ("Local ownership is " + PhotonNetwork.player.ID);
-		Debug.LogWarning ("That remote ownership is" + PhotonNetwork.otherPlayers[0].ID);
-		Debug.LogWarning ("playernumber is " + PhotonNetwork.playerList.Length);
-		Debug.Log ("this number is" + thisPlayerNumber);
-*/
-		if (currentTurnOwner == thisPlayerNumber) {
+		if (currentTurnOwner == thisPlayerNumber && player.transform.childCount == 2) {
 			cellgrid.StartTurn ();
 			enemyTurnText.enabled = false;
 			yourTurnText.enabled = true;
 			if (indicationLight.color.a <= 0.5f) {
 				indicationLight.color = Color.Lerp (indicationLight.color,new Color(indicationLight.color.a,indicationLight.color.b,indicationLight.color.g,0.5f),2.5f*Time.deltaTime);
 			}
-		} else if(thisPlayerNumber != 1000){
+		} else if(thisPlayerNumber != 1000 && player.transform.childCount == 2){
 			enemyTurnText.enabled = true;
 			yourTurnText.enabled = false;
 			if (indicationLight.color.a > 0f) {
