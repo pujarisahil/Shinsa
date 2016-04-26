@@ -10,6 +10,10 @@
 
 	SELECT requester FROM friends WHERE receiver=[player id] AND status=0 UNION SELECT receiver FROM friends WHERE requester=[player id] AND status=0 ORDER BY requester ASC;
 
+# TO GET NUMBER OF FRIENDS
+
+	SELECT COUNT(requester) FROM (SELECT requester FROM friends WHERE receiver=1 AND status=4 UNION SELECT receiver FROM friends WHERE requester=1 AND status=4 ORDER BY requester ASC) AS myfriends;
+
 # TO GET FRIEND REQUESTS
 
 	SELECT requester FROM friends WHERE receiver=[player id] AND status=1;
