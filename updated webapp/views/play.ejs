@@ -9,7 +9,16 @@
     <script src="TemplateData/UnityProgress.js"></script>
   </head>
   <body class="template">
-    <p class="header"><span>Unity WebGL Player | </span>Shinsa</p>
+ 
+  </body>
+</html>
+
+
+
+
+
+
+   <p class="header"><span>Unity WebGL Player | </span>Shinsa</p>
     <div class="template-wrap clear">
       <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" height="510px" width="900px"></canvas>
       <br>
@@ -27,12 +36,9 @@
     codeUrl: "Release/shinsaHTML5.js",
     memUrl: "Release/shinsaHTML5.mem",
   };
-        function GetUsername() {
-        	console.log("I was called");
-        	SendMessage("PlayerStats","assignInfo", "<%= user.firstname %>");
+      function GetUsername() {
+        console.log("I was called");
+        SendMessage("PlayerStats","assignInfo", "<%= user.username %>");
       }
 </script>
 <script src="Release/UnityLoader.js"></script>
-
-  </body>
-</html>

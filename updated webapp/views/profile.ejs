@@ -97,9 +97,10 @@
         </header>
         <nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800">
           <a class="mdl-navigation__link" href="/profile"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Home</a>
-          <a class="mdl-navigation__link" href="/inbox"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">inbox</i>Inbox</a>
+          <a class="mdl-navigation__link" href="/inbox"><i class="mdl-color-text--blue-grey-400 material-icons"role="presentation">inbox</i>Inbox</a>
           <a class="mdl-navigation__link" href="/friends"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">delete</i>Friends</a>
-          <a class="mdl-navigation__link" href="/friendRequests"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">report</i>Friend Requests</a>
+          <a class="mdl-navigation__link" href="/friendRequests">
+            <div class="material-icons mdl-badge mdl-badge--overlap" <% if(numRequests != 0) { %>data-badge="<%= numRequests %>"<% } %>>account_box</div>Friend Requests</a>
           <a class="mdl-navigation__link" href="/tutorial"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">forum</i>Tutorial</a>
           <a class="mdl-navigation__link" href="/users"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">people</i>Users</a>
           <a class="mdl-navigation__link" href="/gamelogs"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">flag</i>Game Logs</a>
@@ -118,7 +119,7 @@
 				.demo-card-square.mdl-card {
 				  width: 320px;
 				  height: 320px;
-				  margin-left: 10px;
+				  margin-left: 2%;
 				}
 				.demo-card-square > .mdl-card__title {
 				  color: #fff;
@@ -132,7 +133,7 @@
 						    <h2 class="mdl-card__title-text">Rank</h2>
 						  </div>
 						  <div class="mdl-card__supporting-text">
-						    Your current rank is ?
+						    Your current rank is <%= rank %>
 						  </div>
 						  <div class="mdl-card__actions mdl-card--border">
 						    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/play">
@@ -146,7 +147,7 @@
 						    <h2 class="mdl-card__title-text">Friend Requests</h2>
 						  </div>
 						  <div class="mdl-card__supporting-text">
-						    You have ? friend requests
+						    You have <%= numRequests %> friend requests
 						  </div>
 						  <div class="mdl-card__actions mdl-card--border">
 						    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/friendRequests">
