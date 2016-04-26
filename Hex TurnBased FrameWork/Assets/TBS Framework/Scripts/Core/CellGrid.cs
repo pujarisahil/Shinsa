@@ -179,7 +179,9 @@ public class CellGrid : MonoBehaviour
 		playAudio(turnSound);
 		GameObject.Find ("NetworkManager").GetComponent<PhotonView> ().RPC ("changeTurnOnFly",PhotonTargets.All);
 		boolLock = false;
-		CurrentPlayerNumber = GameObject.Find ("NetworkManager").GetComponent<photonNetworkManager> ().currentTurnOwner;   
+		CurrentPlayerNumber = GameObject.Find ("NetworkManager").GetComponent<photonNetworkManager> ().currentTurnOwner;
+
+		//GameObject.Find ("NetworkManager").GetComponent<photonNetworkManager> ().stopTimer ();
     }
 
 	/// <summary>
@@ -198,7 +200,10 @@ public class CellGrid : MonoBehaviour
 			});
 			Players.Find(p => p.PlayerNumber.Equals(CurrentPlayerNumber)).Play(this); 
 			boolLock = true;
+			//GameObject.Find ("NetworkManager").GetComponent<photonNetworkManager> ().startTimer ();
 		}
+
+
 		}
 
 }
