@@ -1,0 +1,62 @@
+# TO GET ACCOUNT DATA
+
+	SELECT * FROM accounts WHERE username=[player username] LIMIT 1;
+
+# TO GET PLAYER ID
+
+	SELECT id FROM accounts WHERE username=[player username] LIMIT 1;
+
+# TO GET FRIENDS LIST
+
+	SELECT requester FROM friends WHERE receiver=[player id] AND status=0 UNION SELECT receiver FROM friends WHERE requester=[player id] AND status=0 ORDER BY requester ASC;
+
+# TO GET FRIEND REQUESTS
+
+	SELECT requester FROM friends WHERE receiver=[player id] AND status=1;
+
+# TO GET A FRIEND'S INFORMATION
+
+	SELECT username, firstname, lastname, score FROM accounts WHERE username=[friend's username] LIMIT 1;
+
+# TO MAKE A FRIEND REQUEST
+
+	SELECT COUNT(status) FROM friends WHERE (requester=[other player id] AND receiver=[my id]) OR (requester=[my id] AND receiver=[other player id]);
+
+	** If the number returned is greater than 0, they are already friends or a friend request has already been sent, so do not continue **
+
+	INSERT INTO friends VALUES([my id], [other player id], 1);
+
+# TO ACCEPT FRIEND REQUEST
+
+	SELECT COUNT(status) FROM friends WHERE requester=[other player id] AND receiver=[my id] AND status=1;
+
+	** If the number returned is less than 1, then no friend request has been made, so do not continue **
+
+	UPDATE friends SET status=0 WHERE requester=[other player id] AND receiver=[my id];
+
+# TO DENY A FRIEND REQUEST
+
+	SELECT COUNT(status) FROM friends WHERE requester=[other player id] AND receiver=[my id] AND status=1;
+
+	** If the number returned is less than 1, then no friend request has been made,
+ so do not continue **
+
+	DELETE FROM friends WHERE requester=[other player id] AND receiver=[my id];
+
+# TO LOG GAME
+
+	INSERT INTO logs VALUES (NOW(), [winner id], [loser id]);
+
+# TO GET GAME LOGS
+
+	SELECT * FROM logs;
+
+# TO SEARCH FOR PLAYERS
+
+	SELECT username FROM accounts WHERE username LIKE '[query]%' UNION SELECT username FROM accounts WHERE firstname LIKE '[query]%' UNION SELECT username FROM accounts WHERE lastname LIKE '[query]%';
+
+# TO GET PLAYER RANK
+
+	SELECT COUNT(score) FROM accounts WHERE score>=[player score];
+
+
