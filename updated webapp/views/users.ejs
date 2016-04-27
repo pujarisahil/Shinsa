@@ -21,7 +21,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Material Design Lite</title>
+    <title>Shinsa</title>
 
     <!-- Add to homescreen for Chrome on Android -->
     <meta name="mobile-web-app-capable" content="yes">
@@ -83,7 +83,7 @@
           <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
             <li class="mdl-menu__item">About</li>
             <li class="mdl-menu__item">Contact</li>
-            <li class="mdl-menu__item">Legal information</li>
+            <a href="/" style="text-decoration:none;"><li class="mdl-menu__item">Logout</li></a>
           </ul>
         </div>
       </header>
@@ -135,7 +135,7 @@
     						    <h2 class="mdl-card__title-text"><%= rows[i].username %></h2>
     						  </div>
     						  <div class="mdl-card__supporting-text">
-    						    Your current rank is ?
+    						    Difference in your score is <%= (user.score) - rows[i].score %>
     						  </div>
     						  <div class="mdl-card__actions mdl-card--border">
     						      <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/getProfile?<%= rows[i].username %>">
