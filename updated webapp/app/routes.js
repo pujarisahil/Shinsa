@@ -100,7 +100,7 @@ module.exports = function(app, passport) {
 
 
   app.get("/inbox", isLoggedIn, function(req, res) {
-    connection.query("SELECT * FROM messages WHERE ofUser = ?", [req.user.username], function(err, rows) {
+    connection.query("SELECT * FROM messages WHERE ofUser = ? AND flag=0", [req.user.username], function(err, rows) {
       if (err)
         console.log(err);
       if (rows.length) {
@@ -384,6 +384,33 @@ module.exports = function(app, passport) {
 
   });
 
+  app.get("/muteUser", function(req, res) {
+    
+  });
+
+
+  app.get("/mute", function(req, res) {
+    var tempUrl = req.url;
+    tempUrl = tempUrl.split("?");
+    tempUrl = tempUrl[1];
+
+    var profileOf = tempUrl;
+    var message = req.body.theMessage;
+
+    connection.query("UPDATE messages SET flag=1 WHERE ofUser=(" + "\"" + profileOf + "\"" + ";", function(err, rows2) {
+      if (err)
+        console.log(err);
+
+      // if(rows2.length) {
+      //   console.log("Message sent");
+      // } else {
+      //   console.log("Message sent");
+      // }
+    });
+
+    res.redirect("/profile");
+  });
+
   app.post("/sendMessage", function(req, res) {
     var tempUrl = req.url;
     tempUrl = tempUrl.split("?");
@@ -392,7 +419,7 @@ module.exports = function(app, passport) {
     var profileOf = tempUrl;
     var message = req.body.theMessage;
 
-    connection.query("INSERT INTO messages VALUES(" + "\"" + profileOf + "\"" + ", " + "\"" + req.user.username + "\"" + ", " + "\"" + message + "\"" + ", NOW());", function(err, rows2) {
+    connection.query("INSERT INTO messages VALUES(" + "\"" + profileOf + "\"" + ", " + "\"" + req.user.username + "\"" + ", " + "\"" + message + "\"" + ", NOW(), 0);", function(err, rows2) {
       if (err)
         console.log(err);
 
