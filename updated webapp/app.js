@@ -2,17 +2,14 @@ var express               =   require("express"),
     app                   =   express(),
     bodyParser            =   require("body-parser"),
     passport              =   require("passport"),
-    // LocalStrategy         =   require("passport-local"),
     bcrypt                =   require('bcrypt-nodejs'),
     morgan                =   require('morgan'),
-    // passportLocalMongoose =   require("passport-local-mongoose"),
     flash                 =   require('connect-flash');
-    //mysql                 =   require('mysql');
     
 
 require('./config/passport')(passport);
 
-// app.use(morgan('dev'));
+app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended : true}));
 app.use(bodyParser.json());
 app.set("view engine", "ejs");
